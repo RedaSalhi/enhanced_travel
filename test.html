@@ -1529,12 +1529,12 @@
             // Utility functions
             getCurrencySymbol() {
                 const symbols = {
-                    'USD': ',
+                    'USD': '$',
                     'EUR': '€',
                     'GBP': '£',
                     'JPY': '¥'
                 };
-                return symbols[this.tripInfo.currency] || ';
+                return symbols[this.tripInfo.currency] || '';
             },
 
             updateStats() {
