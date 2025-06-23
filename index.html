@@ -4,7 +4,71 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🎒 Adventure Planner</title>
-    <script src="https://cdn.auth0.com/js/auth0-spa-js/2.0/auth0-spa-js.production.js"></script>
+    <script>
+        // Try multiple CDN sources for Auth0
+        function loadAuth0SDK() {
+            return new Promise((resolve, reject) => {
+                const cdnUrls = [
+                    'https://cdn.auth0.com/js/auth0-spa-js/2.0/auth0-spa-js.production.js',
+                    'https://unpkg.com/@auth0/auth0-spa-js@2.0.0/dist/auth0-spa-js.production.js',
+                    'https://cdn.jsdelivr.net/npm/@auth0/auth0-spa-js@2.0.0/dist/auth0-spa-js.production.js'
+                ];
+                
+                let currentIndex = 0;
+                
+                function tryNextCDN() {
+                    if (currentIndex >= cdnUrls.length) {
+                        reject(new Error('All Auth0 CDN sources failed to load'));
+                        return;
+                    }
+                    
+                    const script = document.createElement('script');
+                    script.src = cdnUrls[currentIndex];
+                    script.async = true;
+                    
+                    script.onload = () => {
+                        // Wait a bit for the SDK to be available
+                        setTimeout(() => {
+                            if (typeof createAuth0Client !== 'undefined') {
+                                resolve();
+                            } else {
+                                currentIndex++;
+                                tryNextCDN();
+                            }
+                        }, 100);
+                    };
+                    
+                    script.onerror = () => {
+                        console.warn(`Failed to load Auth0 from: ${cdnUrls[currentIndex]}`);
+                        currentIndex++;
+                        tryNextCDN();
+                    };
+                    
+                    document.head.appendChild(script);
+                }
+                
+                // Check if Auth0 is already loaded
+                if (typeof createAuth0Client !== 'undefined') {
+                    resolve();
+                    return;
+                }
+                
+                tryNextCDN();
+            });
+        }
+
+        // Wait for Auth0 SDK to load with timeout
+        function waitForAuth0() {
+            return new Promise((resolve, reject) => {
+                loadAuth0SDK()
+                    .then(resolve)
+                    .catch((error) => {
+                        console.error('Auth0 SDK loading failed:', error);
+                        reject(error);
+                    });
+            });
+        }
+    </script>
     <style>
         * {
             margin: 0;
@@ -438,6 +502,16 @@
             transition: width 0.3s ease;
         }
 
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 1.5rem;
+        }
+
         @media (max-width: 768px) {
             .header {
                 flex-direction: column;
@@ -464,12 +538,20 @@
     </style>
 </head>
 <body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading">
+        <div>
+            <div style="font-size: 3rem; margin-bottom: 1rem;">🎒</div>
+            <div>Loading Adventure Planner...</div>
+        </div>
+    </div>
+
     <!-- Authentication Screen -->
-    <div id="authScreen" class="auth-container">
+    <div id="authScreen" class="auth-container" style="display: none;">
         <div class="auth-card">
             <h1 class="auth-title">🎒 Adventure Planner</h1>
             <p class="auth-subtitle">Sign in to start planning your perfect backpacking journey</p>
-            <button class="btn btn-primary" onclick="login()">🔐 Sign In with Netlify</button>
+            <button class="btn btn-primary" onclick="handleLogin()" id="loginBtn">🔐 Sign In with Auth0</button>
             <p style="margin-top: 1rem; font-size: 0.9rem; color: #6c757d;">
                 Don't have an account? Click sign in to create one!
             </p>
@@ -707,9 +789,12 @@
     </div>
 
     <script>
-        const AUTH0_DOMAIN  = 'dev-84x7x1f730vyw2fi.uk.auth0.com';
-        const AUTH0_CLIENT = '3SYtHKuI7KKouIpheRzG3XTFkUppidNx';
+        // Auth0 Configuration - Replace with your actual values
+        const AUTH0_DOMAIN = 'dev-84x7x1f730vyw2fi.uk.auth0.com';
+        const AUTH0_CLIENT_ID = '3SYtHKuI7KKouIpheRzG3XTFkUppidNx';
+
         // Global variables
+        let auth0 = null;
         let currentUser = null;
         let tripData = [];
         let budgetData = {
@@ -723,64 +808,149 @@
         let documentsData = {}; // Store documents by day
         let checklistData = {}; // Store checklists by day
 
-
-        let auth0 = null;
-
+        // Initialize Auth0
         async function initAuth0() {
-            auth0 = await createAuth0Client({
-            domain: AUTH0_DOMAIN,
-            clientId: AUTH0_CLIENT,
-            authorizationParams: {
-                redirect_uri: window.location.origin       // return here after login
-            }
-            });
+            try {
+                // Wait for Auth0 SDK to be available
+                await waitForAuth0();
+                
+                auth0 = await createAuth0Client({
+                    domain: AUTH0_DOMAIN,
+                    clientId: AUTH0_CLIENT_ID,
+                    authorizationParams: {
+                        redirect_uri: window.location.origin
+                    }
+                });
 
-            // 2. Handle redirect back from Auth0 (…?code=…&state=…)
-            if (window.location.search.includes('code=') &&
-                window.location.search.includes('state=')) {
-            await auth0.handleRedirectCallback();
-            window.history.replaceState({}, document.title, '/'); // clean URL
-            }
+                // Handle redirect back from Auth0
+                if (window.location.search.includes('code=') && window.location.search.includes('state=')) {
+                    await auth0.handleRedirectCallback();
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                }
 
-            // 3. Is the user already logged-in?
-            const isAuthenticated = await auth0.isAuthenticated();
-            if (isAuthenticated) {
-            currentUser = await auth0.getUser();     // profile object
-            showMainApp();
-            loadUserData();
-            } else {
-            showAuthScreen();
+                // Check if user is authenticated
+                const isAuthenticated = await auth0.isAuthenticated();
+                
+                if (isAuthenticated) {
+                    currentUser = await auth0.getUser();
+                    showMainApp();
+                    loadUserData();
+                } else {
+                    showAuthScreen();
+                }
+            } catch (error) {
+                console.error('Auth0 initialization error:', error);
+                
+                if (error.message.includes('Auth0 CDN sources failed') || error.message.includes('Auth0 SDK failed')) {
+                    // Fallback: Show app without authentication
+                    showAlert('Authentication service unavailable. Running in offline mode.', 'warning');
+                    currentUser = { email: 'offline@user.com', name: 'Offline User' };
+                    showMainApp();
+                } else {
+                    showAlert('Authentication error. Please refresh the page.', 'error');
+                    showAuthScreen();
+                }
             }
         }
 
-        // 4. Expose login / logout for your buttons
+        // Safe login wrapper
+        function handleLogin() {
+            const btn = document.getElementById('loginBtn');
+            
+            // If Auth0 failed to load, show alternative message
+            if (!auth0) {
+                showAlert('Authentication service is not available. The app is running in offline mode.', 'warning');
+                return;
+            }
+            
+            if (btn) {
+                btn.textContent = '🔄 Connecting...';
+                btn.disabled = true;
+            }
+            
+            login().finally(() => {
+                if (btn) {
+                    btn.textContent = '🔐 Sign In with Auth0';
+                    btn.disabled = false;
+                }
+            });
+        }
+
+        // Authentication functions
         async function login() {
-            await auth0.loginWithRedirect();           // Universal Login
+            try {
+                // Check if auth0 client is initialized
+                if (!auth0) {
+                    showAlert('Authentication is still loading. Please wait...', 'warning');
+                    return;
+                }
+                
+                await auth0.loginWithRedirect();
+            } catch (error) {
+                console.error('Login error:', error);
+                showAlert('Login failed. Please try again.', 'error');
+            }
         }
 
         function logout() {
-            auth0.logout({ logoutParams: { returnTo: window.location.origin }});
+            try {
+                if (!auth0) {
+                    showAlert('Authentication error. Please refresh the page.', 'error');
+                    return;
+                }
+                
+                auth0.logout({
+                    logoutParams: {
+                        returnTo: window.location.origin
+                    }
+                });
+            } catch (error) {
+                console.error('Logout error:', error);
+                showAlert('Logout failed. Please refresh the page.', 'error');
+            }
+        }
+
+        // UI State functions
+        function showLoadingScreen() {
+            document.getElementById('loadingScreen').style.display = 'flex';
+            document.getElementById('authScreen').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'none';
         }
 
         function showAuthScreen() {
+            document.getElementById('loadingScreen').style.display = 'none';
             document.getElementById('authScreen').style.display = 'flex';
             document.getElementById('mainApp').style.display = 'none';
         }
 
         function showMainApp() {
+            document.getElementById('loadingScreen').style.display = 'none';
             document.getElementById('authScreen').style.display = 'none';
             document.getElementById('mainApp').style.display = 'block';
+            
             if (currentUser) {
-                document.getElementById('userEmail').textContent = currentUser.email;
+                document.getElementById('userEmail').textContent = currentUser.email || currentUser.name || 'User';
             }
             updateUI();
+            initializeGeneralChecklist();
         }
-        
-        window.addEventListener('DOMContentLoaded', () => {
-            initAuth0();          // 🔑 start authentication flow
-            setupEventListeners(); // your original function
-        });
 
+        // Initialize app
+        window.addEventListener('DOMContentLoaded', async function() {
+            showLoadingScreen();
+            setupEventListeners();
+            
+            // Wait a bit longer to ensure all scripts are loaded
+            setTimeout(async () => {
+                try {
+                    await initAuth0();
+                } catch (error) {
+                    console.error('Failed to initialize Auth0:', error);
+                    showAlert('Failed to initialize authentication. Please refresh the page.', 'error');
+                    showAuthScreen();
+                }
+            }, 500); // Increased delay to 500ms
+        });
 
         // Data Storage Functions (using memory since localStorage isn't available)
         function saveUserData() {
@@ -794,15 +964,13 @@
             };
             
             // In a real implementation, you would save this to a backend database
-            // For demo purposes, we'll use memory storage
             console.log('Saving user data:', data);
             showAlert('✅ Data saved to cloud!', 'success');
         }
 
         function loadUserData() {
             // In a real implementation, you would load this from a backend database
-            // For demo purposes, we'll initialize with empty data
-            console.log('Loading user data for:', currentUser.email);
+            console.log('Loading user data for:', currentUser.email || currentUser.name);
             updateUI();
         }
 
@@ -822,6 +990,7 @@
                 updateUI();
                 updateDaysList();
                 updateDocumentSelects();
+                updateChecklistSelects();
                 showAlert('✅ All data cleared!', 'success');
             }
         }
@@ -1633,32 +1802,6 @@
                 saveUserData();
             }
         }
-
-        // Auto-initialize general checklist when app loads
-        window.addEventListener('DOMContentLoaded', function() {
-            setTimeout(() => {
-                if (currentUser) {
-                    initializeGeneralChecklist();
-                }
-            }, 1000);
-        });
     </script>
-
-    <!-- Netlify Identity Widget CSS Override -->
-    <style>
-        .netlify-identity-button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-            border: none !important;
-            border-radius: 8px !important;
-            padding: 0.75rem 1.5rem !important;
-            font-weight: 600 !important;
-            transition: all 0.3s ease !important;
-        }
-        
-        .netlify-identity-button:hover {
-            transform: translateY(-1px) !important;
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3) !important;
-        }
-    </style>
 </body>
 </html>
