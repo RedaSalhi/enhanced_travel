@@ -723,10 +723,8 @@
         let documentsData = {}; // Store documents by day
         let checklistData = {}; // Store checklists by day
 
-        import createAuth0Client from 'https://cdn.auth0.com/js/auth0-spa-js/2.0/auth0-spa-js.esm.js';
 
         let auth0 = null;
-        let currentUser = null;
 
         async function initAuth0() {
             auth0 = await createAuth0Client({
