@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Travel Planner - Plan Your Perfect Trip</title>
+    <title>✈️ TravelFlow - Plan Your Perfect Journey</title>
     <style>
         * {
             margin: 0;
@@ -11,148 +11,237 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --warning-gradient: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            --danger-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            --dark-gradient: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            --light-bg: #f8fafc;
+            --card-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            --hover-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            --border-radius: 16px;
+            --text-primary: #2d3748;
+            --text-secondary: #718096;
+            --animation-speed: 0.3s;
+        }
+
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #333;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--light-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 1rem;
         }
 
+        /* Header */
         .header {
-            text-align: center;
-            margin-bottom: 30px;
+            background: var(--primary-gradient);
             color: white;
+            padding: 4rem 2rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
         }
 
         .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
         }
 
         .header p {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             opacity: 0.9;
+            position: relative;
+            z-index: 1;
         }
 
-        .stats-bar {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            text-align: center;
-            transition: transform 0.2s ease;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-2px);
-        }
-
-        .stat-value {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #667eea;
-            margin-bottom: 5px;
-        }
-
-        .stat-label {
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        .tabs {
+        /* Navigation Tabs */
+        .nav-tabs {
             display: flex;
             background: white;
-            border-radius: 12px;
-            padding: 6px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: var(--border-radius);
+            padding: 0.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--card-shadow);
             overflow-x: auto;
+            gap: 0.25rem;
         }
 
-        .tab {
-            flex: 1;
-            padding: 12px 20px;
-            text-align: center;
-            background: transparent;
+        .nav-tab {
+            padding: 1rem 1.5rem;
             border: none;
-            border-radius: 8px;
+            background: transparent;
+            border-radius: 12px;
             cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s ease;
+            transition: all var(--animation-speed) ease;
             white-space: nowrap;
-            min-width: 100px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            position: relative;
+            overflow: hidden;
         }
 
-        .tab.active {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+        .nav-tab.active {
+            background: var(--primary-gradient);
             color: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+            box-shadow: var(--hover-shadow);
         }
 
-        .tab:hover:not(.active) {
-            background: #f8f9fa;
+        .nav-tab:hover:not(.active) {
+            background: #f7fafc;
+            transform: translateY(-1px);
         }
 
+        /* Tab Content */
         .tab-content {
             display: none;
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            min-height: 500px;
+            animation: fadeIn 0.5s ease;
         }
 
         .tab-content.active {
             display: block;
-            animation: fadeIn 0.3s ease;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--card-shadow);
+            transition: all var(--animation-speed) ease;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 600;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            box-shadow: var(--card-shadow);
+            transition: all var(--animation-speed) ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Forms */
         .form-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
+            gap: 2rem;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 1.5rem;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #333;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
         }
 
         .form-group input,
         .form-group select,
         .form-group textarea {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #e1e5e9;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s ease;
+            padding: 0.875rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all var(--animation-speed) ease;
+            background: white;
         }
 
         .form-group input:focus,
@@ -160,1471 +249,2086 @@
         .form-group textarea:focus {
             outline: none;
             border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-1px);
         }
 
+        /* Buttons */
         .btn {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
+            padding: 0.875rem 1.75rem;
             border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            font-size: 16px;
+            transition: all var(--animation-speed) ease;
+            margin: 0.25rem;
+            position: relative;
+            overflow: hidden;
         }
 
-        .btn:hover {
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            transition: all 0.6s ease;
+            transform: translate(-50%, -50%);
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
         }
 
         .btn-secondary {
-            background: #6c757d;
+            background: var(--dark-gradient);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success-gradient);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning-gradient);
+            color: var(--text-primary);
         }
 
         .btn-danger {
-            background: #dc3545;
+            background: var(--danger-gradient);
+            color: white;
         }
 
-        .btn-small {
-            padding: 8px 16px;
-            font-size: 14px;
+        /* Journey Cards */
+        .journey-card {
+            background: white;
+            border: 2px solid #f1f5f9;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all var(--animation-speed) ease;
+            position: relative;
         }
 
-        .card {
-            background: #f8f9fa;
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
+        .journey-card:hover {
+            transform: translateX(4px);
+            border-color: #667eea;
+            box-shadow: var(--hover-shadow);
         }
 
-        .card:hover {
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .card-header {
+        .journey-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 1.5rem;
         }
 
-        .card-title {
-            font-size: 1.2rem;
+        .journey-title {
+            font-size: 1.25rem;
             font-weight: 600;
-            color: #333;
+            color: var(--text-primary);
         }
 
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: #e9ecef;
-            border-radius: 4px;
-            overflow: hidden;
-            margin: 10px 0;
+        .journey-cost {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
         }
 
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            transition: width 0.3s ease;
+        .progress-indicator {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            border-radius: 2px;
         }
 
+        .progress-high { background: var(--success-gradient); }
+        .progress-medium { background: var(--warning-gradient); }
+        .progress-low { background: var(--danger-gradient); }
+
+        /* Timeline */
         .timeline {
             position: relative;
-            padding-left: 30px;
+            padding: 2rem 0;
         }
 
         .timeline::before {
             content: '';
             position: absolute;
-            left: 15px;
+            left: 30px;
             top: 0;
             bottom: 0;
             width: 2px;
-            background: #e9ecef;
+            background: var(--primary-gradient);
+            border-radius: 1px;
         }
 
         .timeline-item {
             position: relative;
-            margin-bottom: 30px;
-            padding-left: 30px;
+            margin-bottom: 2rem;
+            padding-left: 80px;
         }
 
-        .timeline-item::before {
-            content: '';
+        .timeline-marker {
             position: absolute;
-            left: -23px;
-            top: 0;
-            width: 12px;
-            height: 12px;
+            left: 20px;
+            top: 10px;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
-            background: #667eea;
-            border: 3px solid white;
-            box-shadow: 0 0 0 3px #667eea;
-        }
-
-        .timeline-item.completed::before {
-            background: #28a745;
-            box-shadow: 0 0 0 3px #28a745;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #6c757d;
-        }
-
-        .empty-state h3 {
-            margin-bottom: 10px;
-            font-size: 1.5rem;
-        }
-
-        .empty-state p {
-            margin-bottom: 20px;
-        }
-
-        .map-container {
-            height: 400px;
-            background: #f8f9fa;
-            border-radius: 8px;
+            background: var(--primary-gradient);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 20px;
-            border: 2px dashed #dee2e6;
+            color: white;
+            font-weight: bold;
+            font-size: 0.8rem;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
         }
 
-        .budget-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
+        /* Map Container */
+        .map-container {
             background: white;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--card-shadow);
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
         }
 
-        .budget-category {
-            font-weight: 500;
+        .map-placeholder {
+            text-align: center;
+            color: var(--text-secondary);
         }
 
-        .budget-amount {
-            font-weight: 600;
-            color: #667eea;
+        /* Route Visualization */
+        .route-visual {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
         }
 
+        .route-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            flex-shrink: 0;
+        }
+
+        .route-line {
+            height: 2px;
+            background: var(--primary-gradient);
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .route-line::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* Alerts */
         .alert {
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            border-left: 4px solid;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .alert-success {
+            background: #f0fff4;
+            border-color: #38a169;
+            color: #22543d;
         }
 
         .alert-warning {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            color: #856404;
+            background: #fffbf0;
+            border-color: #ed8936;
+            color: #744210;
         }
 
-        .alert-danger {
-            background: #f8d7da;
-            border: 1px solid #f5c6cb;
-            color: #721c24;
+        .alert-error {
+            background: #fff5f5;
+            border-color: #e53e3e;
+            color: #742a2a;
         }
 
+        .alert-info {
+            background: #ebf8ff;
+            border-color: #3182ce;
+            color: #2a4365;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            background: #e2e8f0;
+            border-radius: 8px;
+            height: 8px;
+            overflow: hidden;
+            margin: 0.5rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-gradient);
+            border-radius: 8px;
+            transition: width var(--animation-speed) ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: progress-shimmer 2s infinite;
+        }
+
+        @keyframes progress-shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* Document Management */
+        .document-item {
+            background: white;
+            border: 2px solid #f1f5f9;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all var(--animation-speed) ease;
+            position: relative;
+        }
+
+        .document-item.confirmed {
+            border-color: #38a169;
+            background: #f0fff4;
+        }
+
+        .document-item.pending {
+            border-color: #ed8936;
+            background: #fffbf0;
+        }
+
+        .document-item.cancelled {
+            border-color: #e53e3e;
+            background: #fff5f5;
+        }
+
+        /* Task Management */
         .task-item {
+            background: white;
+            border: 2px solid #f1f5f9;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
             display: flex;
             align-items: center;
-            padding: 15px;
-            background: white;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            gap: 1rem;
+            transition: all var(--animation-speed) ease;
         }
 
-        .task-checkbox {
-            margin-right: 15px;
-            width: 20px;
-            height: 20px;
+        .task-item:hover {
+            transform: translateX(4px);
+            box-shadow: var(--card-shadow);
         }
 
-        .task-content {
-            flex: 1;
+        .task-item.completed {
+            background: #f0fff4;
+            border-color: #38a169;
+            opacity: 0.8;
         }
 
-        .task-title {
-            font-weight: 500;
-            margin-bottom: 5px;
+        .task-item.high-priority {
+            border-left: 6px solid #e53e3e;
         }
 
-        .task-meta {
-            font-size: 0.9rem;
-            color: #6c757d;
+        .task-item.medium-priority {
+            border-left: 6px solid #ed8936;
+        }
+
+        .task-item.low-priority {
+            border-left: 6px solid #38a169;
+        }
+
+        .priority-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
         }
 
         .priority-high {
-            border-left: 4px solid #dc3545;
+            background: var(--danger-gradient);
+            color: white;
         }
 
         .priority-medium {
-            border-left: 4px solid #ffc107;
+            background: var(--warning-gradient);
+            color: var(--text-primary);
         }
 
         .priority-low {
-            border-left: 4px solid #28a745;
+            background: var(--success-gradient);
+            color: white;
         }
 
-        .export-section {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 20px;
-        }
-
-        .export-buttons {
+        /* Currency Selector */
+        .currency-selector {
             display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
         }
 
-        .hidden {
-            display: none !important;
+        .currency-flag {
+            font-size: 1.5rem;
         }
 
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            max-width: 90%;
+            max-height: 90%;
+            overflow: auto;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--danger-gradient);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--animation-speed) ease;
+        }
+
+        .close-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Data Storage Info */
+        .storage-info {
+            background: linear-gradient(135deg, #e6f3ff 0%, #cce7ff 100%);
+            border: 2px solid #3182ce;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        /* Responsive Design */
         @media (max-width: 768px) {
             .container {
-                padding: 10px;
+                padding: 0.5rem;
             }
             
             .header h1 {
                 font-size: 2rem;
             }
             
-            .tabs {
+            .nav-tabs {
                 flex-direction: column;
-            }
-            
-            .tab {
-                text-align: left;
-                padding: 15px;
+                gap: 0.5rem;
             }
             
             .form-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .journey-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .timeline-item {
+                padding-left: 60px;
+            }
+            
+            .modal-content {
+                margin: 1rem;
+                max-width: calc(100% - 2rem);
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.3);
+            transition: all var(--animation-speed) ease;
+            z-index: 100;
+        }
+
+        .fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .quick-action {
+            background: white;
+            border: 2px solid #f1f5f9;
+            border-radius: 12px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all var(--animation-speed) ease;
+            text-align: center;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .quick-action:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: var(--card-shadow);
+        }
+
+        .quick-action-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Budget Visualization */
+        .budget-ring {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: conic-gradient(
+                from 0deg,
+                #667eea 0deg,
+                #667eea var(--used-angle, 0deg),
+                #e2e8f0 var(--used-angle, 0deg),
+                #e2e8f0 360deg
+            );
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            position: relative;
+        }
+
+        .budget-ring::before {
+            content: '';
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: white;
+            position: absolute;
+        }
+
+        .budget-center {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Header -->
         <div class="header">
-            <h1>Travel Planner</h1>
-            <p>Plan your perfect trip with our comprehensive travel planning tool</p>
+            <h1>✈️ TravelFlow</h1>
+            <p>Plan your perfect journey with intelligent tools and beautiful visualization</p>
         </div>
 
-        <div class="stats-bar">
+        <!-- Data Storage Info -->
+        <div class="storage-info">
+            <h4>🔒 Private & Secure</h4>
+            <p>Your travel data is stored locally on your device. Private, secure, and always available offline!</p>
+        </div>
+
+        <!-- Quick Stats Overview -->
+        <div id="statsOverview" class="stats-grid" style="display: none;">
             <div class="stat-card">
                 <div class="stat-value" id="totalDays">0</div>
-                <div class="stat-label">Days</div>
+                <div class="stat-label">📅 Journey Days</div>
             </div>
             <div class="stat-card">
                 <div class="stat-value" id="totalBudget">$0</div>
-                <div class="stat-label">Budget</div>
+                <div class="stat-label">💰 Total Budget</div>
             </div>
             <div class="stat-card">
                 <div class="stat-value" id="completionRate">0%</div>
-                <div class="stat-label">Completion</div>
+                <div class="stat-label">✅ Completion</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="destinationCount">0</div>
+                <div class="stat-label">🌍 Destinations</div>
             </div>
         </div>
 
-        <div class="tabs">
-            <button class="tab active" data-tab="overview">Overview</button>
-            <button class="tab" data-tab="planning">Planning</button>
-            <button class="tab" data-tab="map">Visual Map</button>
-            <button class="tab" data-tab="budget">Budget</button>
-            <button class="tab" data-tab="documents">Documents</button>
-            <button class="tab" data-tab="tasks">Tasks</button>
-            <button class="tab" data-tab="summary">Summary</button>
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab('overview')">🌍 Overview</button>
+            <button class="nav-tab" onclick="showTab('planning')">📅 Planning</button>
+            <button class="nav-tab" onclick="showTab('visual')">🗺️ Visual Map</button>
+            <button class="nav-tab" onclick="showTab('budget')">💰 Budget</button>
+            <button class="nav-tab" onclick="showTab('documents')">📄 Documents</button>
+            <button class="nav-tab" onclick="showTab('tasks')">✅ Tasks</button>
+            <button class="nav-tab" onclick="showTab('summary')">📋 Summary</button>
         </div>
 
-        <!-- Overview Tab -->
+        <!-- Trip Overview Tab -->
         <div id="overview" class="tab-content active">
-            <h2 style="margin-bottom: 30px;">Trip Overview</h2>
-            <div class="form-grid">
-                <div class="form-group">
-                    <label for="tripName">Trip Name</label>
-                    <input type="text" id="tripName" placeholder="Enter your trip name">
+            <div class="card">
+                <h2 class="section-title">🌍 Trip Overview</h2>
+                
+                <div class="form-grid">
+                    <div>
+                        <div class="form-group">
+                            <label for="tripName">✨ Trip Name</label>
+                            <input type="text" id="tripName" placeholder="My Amazing Adventure">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="startDate">📅 Start Date</label>
+                            <input type="date" id="startDate">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="endDate">📅 End Date</label>
+                            <input type="date" id="endDate">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="currency">💱 Currency</label>
+                            <select id="currency">
+                                <option value="USD">🇺🇸 USD - US Dollar</option>
+                                <option value="EUR">🇪🇺 EUR - Euro</option>
+                                <option value="GBP">🇬🇧 GBP - British Pound</option>
+                                <option value="JPY">🇯🇵 JPY - Japanese Yen</option>
+                                <option value="CAD">🇨🇦 CAD - Canadian Dollar</option>
+                                <option value="AUD">🇦🇺 AUD - Australian Dollar</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="form-group">
+                            <label for="destinations">🗺️ Destinations</label>
+                            <textarea id="destinations" rows="4" placeholder="List your must-visit places..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="totalBudget">💰 Total Budget</label>
+                            <input type="number" id="totalBudget" min="0" step="100" value="2000">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="travelStyle">🎒 Travel Style</label>
+                            <select id="travelStyle">
+                                <option value="Budget">🎒 Budget Traveler</option>
+                                <option value="Mid-range">🌟 Mid-range Explorer</option>
+                                <option value="Luxury">💎 Luxury Experience</option>
+                                <option value="Adventure">🏔️ Adventure Seeker</option>
+                                <option value="Cultural">🏛️ Cultural Explorer</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="startDate">Start Date</label>
-                    <input type="date" id="startDate">
-                </div>
-                <div class="form-group">
-                    <label for="endDate">End Date</label>
-                    <input type="date" id="endDate">
-                </div>
-                <div class="form-group">
-                    <label for="currency">Currency</label>
-                    <select id="currency">
-                        <option value="USD">USD ($)</option>
-                        <option value="EUR">EUR (€)</option>
-                        <option value="GBP">GBP (£)</option>
-                        <option value="JPY">JPY (¥)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="totalBudgetInput">Total Budget</label>
-                    <input type="number" id="totalBudgetInput" placeholder="Enter total budget">
-                </div>
-                <div class="form-group">
-                    <label for="travelStyle">Travel Style</label>
-                    <select id="travelStyle">
-                        <option value="budget">Budget Travel</option>
-                        <option value="comfort">Comfort Travel</option>
-                        <option value="luxury">Luxury Travel</option>
-                        <option value="adventure">Adventure Travel</option>
-                        <option value="business">Business Travel</option>
-                    </select>
-                </div>
+                
+                <button class="btn btn-primary" onclick="saveTripOverview()">💾 Save Overview</button>
             </div>
-            <button class="btn" id="saveOverviewBtn">Save Overview</button>
         </div>
 
         <!-- Planning Tab -->
         <div id="planning" class="tab-content">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-                <h2>Trip Planning</h2>
-                <button class="btn" id="showAddDayBtn">Add Day</button>
-            </div>
-            
-            <div id="addDayForm" class="hidden">
-                <div class="card">
-                    <h3>Add New Day</h3>
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label for="dayDate">Date</label>
-                            <input type="date" id="dayDate">
-                        </div>
-                        <div class="form-group">
-                            <label for="dayLocation">Location</label>
-                            <input type="text" id="dayLocation" placeholder="Enter location">
-                        </div>
-                        <div class="form-group">
-                            <label for="dayTransport">Transportation</label>
-                            <input type="text" id="dayTransport" placeholder="Flight, train, car...">
-                        </div>
-                        <div class="form-group">
-                            <label for="dayAccommodation">Accommodation</label>
-                            <input type="text" id="dayAccommodation" placeholder="Hotel, Airbnb...">
-                        </div>
-                        <div class="form-group">
-                            <label for="dayCost">Estimated Cost</label>
-                            <input type="number" id="dayCost" placeholder="0">
-                        </div>
-                        <div class="form-group">
-                            <label for="dayNotes">Notes</label>
-                            <textarea id="dayNotes" placeholder="Additional notes..."></textarea>
-                        </div>
+            <div class="card">
+                <h2 class="section-title">📅 Journey Planning</h2>
+                
+                <div class="quick-actions">
+                    <div class="quick-action" onclick="addNewDay()">
+                        <div class="quick-action-icon">➕</div>
+                        <div>Add Day</div>
                     </div>
-                    <div style="display: flex; gap: 10px;">
-                        <button class="btn" id="addDayBtn">Add Day</button>
-                        <button class="btn btn-secondary" id="cancelDayBtn">Cancel</button>
+                    <div class="quick-action" onclick="addMultipleDays()">
+                        <div class="quick-action-icon">📅</div>
+                        <div>Bulk Add</div>
+                    </div>
+                    <div class="quick-action" onclick="generateTemplate()">
+                        <div class="quick-action-icon">🎯</div>
+                        <div>Template</div>
+                    </div>
+                    <div class="quick-action" onclick="clearAllDays()">
+                        <div class="quick-action-icon">🗑️</div>
+                        <div>Clear All</div>
                     </div>
                 </div>
-            </div>
-
-            <div id="daysList">
-                <div class="empty-state">
-                    <h3>No days planned yet</h3>
-                    <p>Start by adding your first day to begin planning your trip</p>
-                    <button class="btn" id="addFirstDayBtn">Add First Day</button>
+                
+                <div id="daysList" class="timeline">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🗺️</div>
+                        <h3>Ready to plan your journey?</h3>
+                        <p>Start by adding your first day above!</p>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Visual Map Tab -->
-        <div id="map" class="tab-content">
-            <h2 style="margin-bottom: 30px;">Visual Map & Timeline</h2>
-            
-            <div class="map-container">
-                <div style="text-align: center;">
-                    <h3>Interactive Map</h3>
-                    <p>Map visualization will show your route with colored markers</p>
-                    <p style="margin-top: 10px; color: #667eea;">🗺️ Add locations in the Planning tab to see them here</p>
+        <div id="visual" class="tab-content">
+            <div class="card">
+                <h2 class="section-title">🗺️ Visual Journey Map</h2>
+                
+                <div class="map-container">
+                    <div class="map-placeholder">
+                        <h3>🗺️ Interactive Route Visualization</h3>
+                        <p>Your journey route will be displayed here</p>
+                        <div id="routeVisualization"></div>
+                    </div>
                 </div>
-            </div>
 
-            <h3 style="margin-bottom: 20px;">Trip Timeline</h3>
-            <div id="timeline" class="timeline">
-                <div class="empty-state">
-                    <h3>No timeline yet</h3>
-                    <p>Add days to your trip to see the timeline</p>
+                <div class="card">
+                    <h3>📍 Journey Timeline</h3>
+                    <div id="visualTimeline"></div>
                 </div>
             </div>
         </div>
 
         <!-- Budget Tab -->
         <div id="budget" class="tab-content">
-            <h2 style="margin-bottom: 30px;">Budget Tracker</h2>
-            
-            <div id="budgetAlerts"></div>
-            
-            <div class="form-grid">
-                <div class="form-group">
-                    <label for="budgetCategory">Category</label>
-                    <select id="budgetCategory">
-                        <option value="accommodation">Accommodation</option>
-                        <option value="transport">Transportation</option>
-                        <option value="food">Food & Dining</option>
-                        <option value="activities">Activities</option>
-                        <option value="shopping">Shopping</option>
-                        <option value="other">Other</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="budgetAmount">Amount</label>
-                    <input type="number" id="budgetAmount" placeholder="0">
-                </div>
-                <div class="form-group">
-                    <label for="budgetDescription">Description</label>
-                    <input type="text" id="budgetDescription" placeholder="Description...">
-                </div>
-                <div class="form-group" style="display: flex; align-items: end;">
-                    <button class="btn" id="addBudgetBtn">Add Expense</button>
-                </div>
-            </div>
-
-            <div style="margin-top: 30px;">
-                <h3>Budget Breakdown</h3>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="budgetProgress" style="width: 0%"></div>
-                </div>
-                <div id="budgetList">
-                    <div class="empty-state">
-                        <h3>No expenses yet</h3>
-                        <p>Start tracking your expenses to manage your budget</p>
+            <div class="card">
+                <h2 class="section-title">💰 Budget Manager</h2>
+                
+                <div class="form-grid">
+                    <div>
+                        <h3>🏨 Accommodation</h3>
+                        <div class="form-group">
+                            <label for="accommodationBudget">Daily Average</label>
+                            <input type="number" id="accommodationBudget" min="0" step="10" value="50">
+                        </div>
+                        
+                        <h3>🍽️ Food & Dining</h3>
+                        <div class="form-group">
+                            <label for="foodBudget">Daily Average</label>
+                            <input type="number" id="foodBudget" min="0" step="5" value="30">
+                        </div>
+                        
+                        <h3>🎯 Activities</h3>
+                        <div class="form-group">
+                            <label for="activitiesBudget">Daily Average</label>
+                            <input type="number" id="activitiesBudget" min="0" step="10" value="40">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3>🚌 Transportation</h3>
+                        <div class="form-group">
+                            <label for="transportBudget">Total Budget</label>
+                            <input type="number" id="transportBudget" min="0" step="50" value="200">
+                        </div>
+                        
+                        <h3>🛍️ Shopping</h3>
+                        <div class="form-group">
+                            <label for="shoppingBudget">Total Budget</label>
+                            <input type="number" id="shoppingBudget" min="0" step="20" value="100">
+                        </div>
+                        
+                        <h3>🚨 Emergency Fund</h3>
+                        <div class="form-group">
+                            <label for="emergencyBudget">Safety Buffer</label>
+                            <input type="number" id="emergencyBudget" min="0" step="50" value="200">
+                        </div>
                     </div>
                 </div>
+
+                <div id="budgetVisualization" class="stats-grid">
+                    <!-- Budget stats will be populated here -->
+                </div>
+
+                <div id="budgetStatus"></div>
             </div>
         </div>
 
         <!-- Documents Tab -->
         <div id="documents" class="tab-content">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-                <h2>Travel Documents</h2>
-                <button class="btn" id="showAddDocBtn">Add Document</button>
-            </div>
-
-            <div id="addDocumentForm" class="hidden">
-                <div class="card">
-                    <h3>Add Document</h3>
-                    <div class="form-grid">
+            <div class="card">
+                <h2 class="section-title">📄 Document Manager</h2>
+                
+                <div class="form-grid">
+                    <div>
+                        <h3>➕ Add New Document</h3>
                         <div class="form-group">
-                            <label for="docType">Document Type</label>
-                            <select id="docType">
-                                <option value="flight">Flight Booking</option>
-                                <option value="hotel">Hotel Reservation</option>
-                                <option value="car">Car Rental</option>
-                                <option value="activity">Activity Booking</option>
-                                <option value="insurance">Travel Insurance</option>
-                                <option value="passport">Passport/Visa</option>
-                                <option value="other">Other</option>
+                            <label for="documentDay">📅 Journey Day</label>
+                            <select id="documentDay">
+                                <option value="">Select Day</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="docName">Document Name</label>
-                            <input type="text" id="docName" placeholder="Enter document name">
+                            <label for="documentType">📂 Document Type</label>
+                            <select id="documentType">
+                                <option value="Flight">✈️ Flight Ticket</option>
+                                <option value="Hotel">🏨 Hotel Booking</option>
+                                <option value="Train">🚂 Train Ticket</option>
+                                <option value="Activity">🎯 Activity Booking</option>
+                                <option value="Restaurant">🍽️ Restaurant Reservation</option>
+                                <option value="Visa">📋 Visa/Permit</option>
+                                <option value="Insurance">🛡️ Travel Insurance</option>
+                                <option value="Other">📄 Other</option>
+                            </select>
                         </div>
                         <div class="form-group">
-                            <label for="docReference">Reference Number</label>
-                            <input type="text" id="docReference" placeholder="Booking reference, ticket number...">
+                            <label for="documentName">📝 Document Name</label>
+                            <input type="text" id="documentName" placeholder="e.g., Paris to London Flight">
                         </div>
                         <div class="form-group">
-                            <label for="docDate">Date</label>
-                            <input type="date" id="docDate">
+                            <label for="documentDetails">📋 Details</label>
+                            <textarea id="documentDetails" rows="3" placeholder="Confirmation number, times, notes..."></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="docNotes">Notes</label>
-                            <textarea id="docNotes" placeholder="Additional notes..."></textarea>
+                            <label for="documentStatus">✅ Status</label>
+                            <select id="documentStatus">
+                                <option value="pending">🟡 Pending</option>
+                                <option value="confirmed">🟢 Confirmed</option>
+                                <option value="cancelled">🔴 Cancelled</option>
+                            </select>
                         </div>
-                    </div>
-                    <div style="display: flex; gap: 10px;">
-                        <button class="btn" id="addDocBtn">Add Document</button>
-                        <button class="btn btn-secondary" id="cancelDocBtn">Cancel</button>
+                        <button class="btn btn-primary" onclick="addDocument()">➕ Add Document</button>
                     </div>
                 </div>
-            </div>
-
-            <div id="documentsList">
-                <div class="empty-state">
-                    <h3>No documents yet</h3>
-                    <p>Add your travel documents to keep everything organized</p>
-                    <button class="btn" id="addFirstDocBtn">Add First Document</button>
+                
+                <div id="documentsContainer">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📄</div>
+                        <h3>No documents yet</h3>
+                        <p>Start adding your bookings and reservations!</p>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Tasks Tab -->
         <div id="tasks" class="tab-content">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-                <h2>Travel Tasks</h2>
-                <button class="btn" id="showAddTaskBtn">Add Task</button>
-            </div>
-
-            <div id="addTaskForm" class="hidden">
-                <div class="card">
-                    <h3>Add Task</h3>
-                    <div class="form-grid">
+            <div class="card">
+                <h2 class="section-title">✅ Task Manager</h2>
+                
+                <div class="form-grid">
+                    <div>
+                        <h3>➕ Add New Task</h3>
                         <div class="form-group">
-                            <label for="taskTitle">Task Title</label>
-                            <input type="text" id="taskTitle" placeholder="Enter task title">
+                            <label for="taskTitle">📝 Task Title</label>
+                            <input type="text" id="taskTitle" placeholder="e.g., Book hotel in Paris">
                         </div>
                         <div class="form-group">
-                            <label for="taskPriority">Priority</label>
+                            <label for="taskDescription">📋 Description</label>
+                            <textarea id="taskDescription" rows="2" placeholder="Additional details..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="taskPriority">⚡ Priority</label>
                             <select id="taskPriority">
-                                <option value="high">High</option>
-                                <option value="medium">Medium</option>
-                                <option value="low">Low</option>
+                                <option value="high">🔴 High Priority</option>
+                                <option value="medium" selected>🟡 Medium Priority</option>
+                                <option value="low">🟢 Low Priority</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="taskDueDate">Due Date</label>
+                            <label for="taskDueDate">📅 Due Date</label>
                             <input type="date" id="taskDueDate">
                         </div>
                         <div class="form-group">
-                            <label for="taskDescription">Description</label>
-                            <textarea id="taskDescription" placeholder="Task description..."></textarea>
+                            <label for="taskCategory">🏷️ Category</label>
+                            <select id="taskCategory">
+                                <option value="Booking">🎫 Booking</option>
+                                <option value="Documents">📄 Documents</option>
+                                <option value="Packing">🧳 Packing</option>
+                                <option value="Research">🔍 Research</option>
+                                <option value="Financial">💰 Financial</option>
+                                <option value="Health">🏥 Health & Safety</option>
+                                <option value="Other">📋 Other</option>
+                            </select>
                         </div>
-                    </div>
-                    <div style="display: flex; gap: 10px;">
-                        <button class="btn" id="addTaskBtn">Add Task</button>
-                        <button class="btn btn-secondary" id="cancelTaskBtn">Cancel</button>
+                        <button class="btn btn-primary" onclick="addTask()">➕ Add Task</button>
                     </div>
                 </div>
-            </div>
+                
+                <div class="quick-actions">
+                    <div class="quick-action" onclick="filterTasks('all')">
+                        <div class="quick-action-icon">📋</div>
+                        <div>All Tasks</div>
+                    </div>
+                    <div class="quick-action" onclick="filterTasks('pending')">
+                        <div class="quick-action-icon">⏳</div>
+                        <div>Pending</div>
+                    </div>
+                    <div class="quick-action" onclick="filterTasks('completed')">
+                        <div class="quick-action-icon">✅</div>
+                        <div>Completed</div>
+                    </div>
+                    <div class="quick-action" onclick="filterTasks('high')">
+                        <div class="quick-action-icon">🔴</div>
+                        <div>High Priority</div>
+                    </div>
+                </div>
 
-            <div id="tasksList">
-                <div class="empty-state">
-                    <h3>No tasks yet</h3>
-                    <p>Add tasks to stay organized before and during your trip</p>
-                    <button class="btn" id="addFirstTaskBtn">Add First Task</button>
+                <div id="taskStats" class="stats-grid">
+                    <!-- Task stats will be populated here -->
+                </div>
+                
+                <div id="tasksContainer">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">✅</div>
+                        <h3>No tasks yet</h3>
+                        <p>Add your first travel preparation task!</p>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Summary Tab -->
         <div id="summary" class="tab-content">
-            <h2 style="margin-bottom: 30px;">Trip Summary</h2>
-            
-            <div id="summaryContent">
-                <div class="empty-state">
-                    <h3>Complete your trip details</h3>
-                    <p>Fill in the other tabs to see your complete trip summary</p>
+            <div class="card">
+                <h2 class="section-title">📋 Journey Summary</h2>
+                
+                <div id="summaryContent">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📊</div>
+                        <h3>Complete your planning</h3>
+                        <p>Your journey summary will appear here once you've added trip details!</p>
+                    </div>
                 </div>
-            </div>
-
-            <div class="export-section">
-                <h3 style="margin-bottom: 15px;">Export Options</h3>
-                <div class="export-buttons">
-                    <button class="btn" id="exportCSVBtn">Export to CSV</button>
-                    <button class="btn btn-secondary" id="copyClipboardBtn">Copy to Clipboard</button>
+                
+                <div class="quick-actions">
+                    <div class="quick-action" onclick="exportToCSV()">
+                        <div class="quick-action-icon">📁</div>
+                        <div>Export CSV</div>
+                    </div>
+                    <div class="quick-action" onclick="copyToClipboard()">
+                        <div class="quick-action-icon">📋</div>
+                        <div>Copy Summary</div>
+                    </div>
+                    <div class="quick-action" onclick="printSummary()">
+                        <div class="quick-action-icon">🖨️</div>
+                        <div>Print</div>
+                    </div>
+                    <div class="quick-action" onclick="clearAllData()">
+                        <div class="quick-action-icon">🗑️</div>
+                        <div style="color: #e53e3e;">Clear Data</div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Floating Action Button -->
+    <button class="fab" onclick="showQuickAdd()">+</button>
+
     <script>
-        // Application State
-        const TravelPlanner = {
-            // Data
-            tripInfo: {
-                name: '',
-                startDate: '',
-                endDate: '',
-                currency: 'USD',
-                totalBudget: 0,
-                travelStyle: 'budget'
-            },
-            tripData: [],
-            budgetData: [],
-            documentsData: [],
-            tasksData: [],
-
-            // Initialize the application
-            init() {
-                this.bindEvents();
-                this.loadData();
-                this.updateStats();
-                this.renderAll();
-            },
-
-            // Bind all event listeners
-            bindEvents() {
-                // Tab navigation
-                document.querySelectorAll('.tab').forEach(tab => {
-                    tab.addEventListener('click', (e) => {
-                        const tabName = e.target.getAttribute('data-tab');
-                        this.showTab(tabName);
-                    });
-                });
-
-                // Overview events
-                const saveOverviewBtn = document.getElementById('saveOverviewBtn');
-                if (saveOverviewBtn) {
-                    saveOverviewBtn.addEventListener('click', () => this.saveOverview());
-                }
-
-                // Planning events
-                this.bindPlanningEvents();
-                
-                // Budget events
-                this.bindBudgetEvents();
-                
-                // Documents events
-                this.bindDocumentEvents();
-                
-                // Tasks events
-                this.bindTaskEvents();
-                
-                // Export events
-                this.bindExportEvents();
-            },
-
-            bindPlanningEvents() {
-                const showAddDayBtn = document.getElementById('showAddDayBtn');
-                const addFirstDayBtn = document.getElementById('addFirstDayBtn');
-                const addDayBtn = document.getElementById('addDayBtn');
-                const cancelDayBtn = document.getElementById('cancelDayBtn');
-
-                if (showAddDayBtn) showAddDayBtn.addEventListener('click', () => this.showAddDayForm());
-                if (addFirstDayBtn) addFirstDayBtn.addEventListener('click', () => this.showAddDayForm());
-                if (addDayBtn) addDayBtn.addEventListener('click', () => this.addDay());
-                if (cancelDayBtn) cancelDayBtn.addEventListener('click', () => this.hideAddDayForm());
-            },
-
-            bindBudgetEvents() {
-                const addBudgetBtn = document.getElementById('addBudgetBtn');
-                if (addBudgetBtn) addBudgetBtn.addEventListener('click', () => this.addBudgetItem());
-            },
-
-            bindDocumentEvents() {
-                const showAddDocBtn = document.getElementById('showAddDocBtn');
-                const addFirstDocBtn = document.getElementById('addFirstDocBtn');
-                const addDocBtn = document.getElementById('addDocBtn');
-                const cancelDocBtn = document.getElementById('cancelDocBtn');
-
-                if (showAddDocBtn) showAddDocBtn.addEventListener('click', () => this.showAddDocumentForm());
-                if (addFirstDocBtn) addFirstDocBtn.addEventListener('click', () => this.showAddDocumentForm());
-                if (addDocBtn) addDocBtn.addEventListener('click', () => this.addDocument());
-                if (cancelDocBtn) cancelDocBtn.addEventListener('click', () => this.hideAddDocumentForm());
-            },
-
-            bindTaskEvents() {
-                const showAddTaskBtn = document.getElementById('showAddTaskBtn');
-                const addFirstTaskBtn = document.getElementById('addFirstTaskBtn');
-                const addTaskBtn = document.getElementById('addTaskBtn');
-                const cancelTaskBtn = document.getElementById('cancelTaskBtn');
-
-                if (showAddTaskBtn) showAddTaskBtn.addEventListener('click', () => this.showAddTaskForm());
-                if (addFirstTaskBtn) addFirstTaskBtn.addEventListener('click', () => this.showAddTaskForm());
-                if (addTaskBtn) addTaskBtn.addEventListener('click', () => this.addTask());
-                if (cancelTaskBtn) cancelTaskBtn.addEventListener('click', () => this.hideAddTaskForm());
-            },
-
-            bindExportEvents() {
-                const exportCSVBtn = document.getElementById('exportCSVBtn');
-                const copyClipboardBtn = document.getElementById('copyClipboardBtn');
-
-                if (exportCSVBtn) exportCSVBtn.addEventListener('click', () => this.exportToCSV());
-                if (copyClipboardBtn) copyClipboardBtn.addEventListener('click', () => this.copyToClipboard());
-            },
-
-            // Tab functionality
-            showTab(tabName) {
-                // Hide all tabs
-                document.querySelectorAll('.tab-content').forEach(tab => {
-                    tab.classList.remove('active');
-                });
-                document.querySelectorAll('.tab').forEach(tab => {
-                    tab.classList.remove('active');
-                });
-
-                // Show selected tab
-                const targetTab = document.getElementById(tabName);
-                if (targetTab) {
-                    targetTab.classList.add('active');
-                }
-                
-                // Activate the clicked tab button
-                const activeTabBtn = document.querySelector(`[data-tab="${tabName}"]`);
-                if (activeTabBtn) {
-                    activeTabBtn.classList.add('active');
-                }
-
-                // Update content based on tab
-                if (tabName === 'map') {
-                    this.renderTimeline();
-                } else if (tabName === 'summary') {
-                    this.renderSummary();
-                }
-            },
-
-            // Overview functions
-            saveOverview() {
-                const tripName = document.getElementById('tripName');
-                const startDate = document.getElementById('startDate');
-                const endDate = document.getElementById('endDate');
-                const currency = document.getElementById('currency');
-                const totalBudgetInput = document.getElementById('totalBudgetInput');
-                const travelStyle = document.getElementById('travelStyle');
-
-                this.tripInfo = {
-                    name: tripName ? tripName.value : '',
-                    startDate: startDate ? startDate.value : '',
-                    endDate: endDate ? endDate.value : '',
-                    currency: currency ? currency.value : 'USD',
-                    totalBudget: totalBudgetInput ? parseFloat(totalBudgetInput.value) || 0 : 0,
-                    travelStyle: travelStyle ? travelStyle.value : 'budget'
-                };
-                
-                this.saveData();
-                this.updateStats();
-                alert('Overview saved successfully!');
-            },
-
-            // Planning functions
-            showAddDayForm() {
-                const form = document.getElementById('addDayForm');
-                if (form) form.classList.remove('hidden');
-            },
-
-            hideAddDayForm() {
-                const form = document.getElementById('addDayForm');
-                if (form) form.classList.add('hidden');
-                this.clearDayForm();
-            },
-
-            clearDayForm() {
-                const fields = ['dayDate', 'dayLocation', 'dayTransport', 'dayAccommodation', 'dayCost', 'dayNotes'];
-                fields.forEach(fieldId => {
-                    const field = document.getElementById(fieldId);
-                    if (field) field.value = '';
-                });
-            },
-
-            addDay() {
-                const dayDate = document.getElementById('dayDate');
-                const dayLocation = document.getElementById('dayLocation');
-                const dayTransport = document.getElementById('dayTransport');
-                const dayAccommodation = document.getElementById('dayAccommodation');
-                const dayCost = document.getElementById('dayCost');
-                const dayNotes = document.getElementById('dayNotes');
-
-                const day = {
-                    id: Date.now(),
-                    date: dayDate ? dayDate.value : '',
-                    location: dayLocation ? dayLocation.value : '',
-                    transport: dayTransport ? dayTransport.value : '',
-                    accommodation: dayAccommodation ? dayAccommodation.value : '',
-                    cost: dayCost ? parseFloat(dayCost.value) || 0 : 0,
-                    notes: dayNotes ? dayNotes.value : '',
-                    completed: false
-                };
-
-                this.tripData.push(day);
-                this.saveData();
-                this.renderDays();
-                this.hideAddDayForm();
-                this.updateStats();
-            },
-
-            renderDays() {
-                const daysList = document.getElementById('daysList');
-                if (!daysList) return;
-                
-                if (this.tripData.length === 0) {
-                    daysList.innerHTML = `
-                        <div class="empty-state">
-                            <h3>No days planned yet</h3>
-                            <p>Start by adding your first day to begin planning your trip</p>
-                            <button class="btn" id="addFirstDayBtn">Add First Day</button>
-                        </div>
-                    `;
-                    // Re-bind the button
-                    const addFirstDayBtn = document.getElementById('addFirstDayBtn');
-                    if (addFirstDayBtn) addFirstDayBtn.addEventListener('click', () => this.showAddDayForm());
-                    return;
-                }
-
-                daysList.innerHTML = this.tripData.map(day => `
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title">${day.date} - ${day.location}</div>
-                            <div>
-                                <button class="btn btn-small ${day.completed ? 'btn-secondary' : ''}" onclick="TravelPlanner.toggleDayCompletion(${day.id})">
-                                    ${day.completed ? 'Completed' : 'Mark Complete'}
-                                </button>
-                                <button class="btn btn-danger btn-small" onclick="TravelPlanner.removeDay(${day.id})">Remove</button>
-                            </div>
-                        </div>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-                            <div><strong>Transport:</strong> ${day.transport || 'Not specified'}</div>
-                            <div><strong>Accommodation:</strong> ${day.accommodation || 'Not specified'}</div>
-                            <div><strong>Cost:</strong> ${this.getCurrencySymbol()}${day.cost}</div>
-                        </div>
-                        ${day.notes ? `<div style="margin-top: 10px;"><strong>Notes:</strong> ${day.notes}</div>` : ''}
-                    </div>
-                `).join('');
-            },
-
-            toggleDayCompletion(id) {
-                const day = this.tripData.find(d => d.id === id);
-                if (day) {
-                    day.completed = !day.completed;
-                    this.saveData();
-                    this.renderDays();
-                    this.updateStats();
-                }
-            },
-
-            removeDay(id) {
-                if (confirm('Are you sure you want to remove this day?')) {
-                    this.tripData = this.tripData.filter(d => d.id !== id);
-                    this.saveData();
-                    this.renderDays();
-                    this.updateStats();
-                }
-            },
-
-            // Budget functions
-            addBudgetItem() {
-                const budgetCategory = document.getElementById('budgetCategory');
-                const budgetAmount = document.getElementById('budgetAmount');
-                const budgetDescription = document.getElementById('budgetDescription');
-
-                const amount = budgetAmount ? parseFloat(budgetAmount.value) || 0 : 0;
-
-                if (amount <= 0) {
-                    alert('Please enter a valid amount');
-                    return;
-                }
-
-                const budgetItem = {
-                    id: Date.now(),
-                    category: budgetCategory ? budgetCategory.value : 'other',
-                    amount: amount,
-                    description: budgetDescription ? budgetDescription.value : '',
-                    date: new Date().toISOString().split('T')[0]
-                };
-
-                this.budgetData.push(budgetItem);
-                this.saveData();
-                this.renderBudget();
-                this.updateStats();
-                this.clearBudgetForm();
-            },
-
-            clearBudgetForm() {
-                const budgetAmount = document.getElementById('budgetAmount');
-                const budgetDescription = document.getElementById('budgetDescription');
-                if (budgetAmount) budgetAmount.value = '';
-                if (budgetDescription) budgetDescription.value = '';
-            },
-
-            renderBudget() {
-                const budgetList = document.getElementById('budgetList');
-                const budgetAlerts = document.getElementById('budgetAlerts');
-                if (!budgetList) return;
-                
-                if (this.budgetData.length === 0) {
-                    budgetList.innerHTML = `
-                        <div class="empty-state">
-                            <h3>No expenses yet</h3>
-                            <p>Start tracking your expenses to manage your budget</p>
-                        </div>
-                    `;
-                } else {
-                    const totalSpent = this.budgetData.reduce((sum, item) => sum + item.amount, 0);
-                    const budgetPercentage = this.tripInfo.totalBudget > 0 ? (totalSpent / this.tripInfo.totalBudget) * 100 : 0;
-                    
-                    const budgetProgress = document.getElementById('budgetProgress');
-                    if (budgetProgress) {
-                        budgetProgress.style.width = Math.min(budgetPercentage, 100) + '%';
-                    }
-
-                    // Budget alerts
-                    let alertsHtml = '';
-                    if (budgetPercentage >= 90) {
-                        alertsHtml = '<div class="alert alert-danger">⚠️ You have exceeded 90% of your budget!</div>';
-                    } else if (budgetPercentage >= 75) {
-                        alertsHtml = '<div class="alert alert-warning">⚠️ You have used 75% of your budget</div>';
-                    }
-                    if (budgetAlerts) budgetAlerts.innerHTML = alertsHtml;
-
-                    // Group by category
-                    const categoryTotals = {};
-                    this.budgetData.forEach(item => {
-                        categoryTotals[item.category] = (categoryTotals[item.category] || 0) + item.amount;
-                    });
-
-                    budgetList.innerHTML = `
-                        <div style="margin-bottom: 20px;">
-                            <h4>By Category</h4>
-                            ${Object.entries(categoryTotals).map(([category, amount]) => `
-                                <div class="budget-item">
-                                    <span class="budget-category">${category.charAt(0).toUpperCase() + category.slice(1)}</span>
-                                    <span class="budget-amount">${this.getCurrencySymbol()}${amount.toFixed(2)}</span>
-                                </div>
-                            `).join('')}
-                        </div>
-                        <div>
-                            <h4>Recent Expenses</h4>
-                            ${this.budgetData.slice(-5).reverse().map(item => `
-                                <div class="budget-item">
-                                    <div>
-                                        <div class="budget-category">${item.description || item.category}</div>
-                                        <div style="font-size: 0.9rem; color: #6c757d;">${item.date}</div>
-                                    </div>
-                                    <span class="budget-amount">${this.getCurrencySymbol()}${item.amount.toFixed(2)}</span>
-                                </div>
-                            `).join('')}
-                        </div>
-                    `;
-                }
-            },
-
-            // Documents functions
-            showAddDocumentForm() {
-                const form = document.getElementById('addDocumentForm');
-                if (form) form.classList.remove('hidden');
-            },
-
-            hideAddDocumentForm() {
-                const form = document.getElementById('addDocumentForm');
-                if (form) form.classList.add('hidden');
-                this.clearDocumentForm();
-            },
-
-            clearDocumentForm() {
-                const fields = ['docName', 'docReference', 'docDate', 'docNotes'];
-                fields.forEach(fieldId => {
-                    const field = document.getElementById(fieldId);
-                    if (field) field.value = '';
-                });
-            },
-
-            addDocument() {
-                const docType = document.getElementById('docType');
-                const docName = document.getElementById('docName');
-                const docReference = document.getElementById('docReference');
-                const docDate = document.getElementById('docDate');
-                const docNotes = document.getElementById('docNotes');
-
-                const name = docName ? docName.value : '';
-                if (!name) {
-                    alert('Please enter a document name');
-                    return;
-                }
-
-                const doc = {
-                    id: Date.now(),
-                    type: docType ? docType.value : 'other',
-                    name: name,
-                    reference: docReference ? docReference.value : '',
-                    date: docDate ? docDate.value : '',
-                    notes: docNotes ? docNotes.value : ''
-                };
-
-                this.documentsData.push(doc);
-                this.saveData();
-                this.renderDocuments();
-                this.hideAddDocumentForm();
-            },
-
-            renderDocuments() {
-                const documentsList = document.getElementById('documentsList');
-                if (!documentsList) return;
-                
-                if (this.documentsData.length === 0) {
-                    documentsList.innerHTML = `
-                        <div class="empty-state">
-                            <h3>No documents yet</h3>
-                            <p>Add your travel documents to keep everything organized</p>
-                            <button class="btn" id="addFirstDocBtn">Add First Document</button>
-                        </div>
-                    `;
-                    // Re-bind the button
-                    const addFirstDocBtn = document.getElementById('addFirstDocBtn');
-                    if (addFirstDocBtn) addFirstDocBtn.addEventListener('click', () => this.showAddDocumentForm());
-                    return;
-                }
-
-                documentsList.innerHTML = this.documentsData.map(doc => `
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="card-title">${doc.name}</div>
-                            <button class="btn btn-danger btn-small" onclick="TravelPlanner.removeDocument(${doc.id})">Remove</button>
-                        </div>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
-                            <div><strong>Type:</strong> ${doc.type.charAt(0).toUpperCase() + doc.type.slice(1)}</div>
-                            <div><strong>Reference:</strong> ${doc.reference || 'N/A'}</div>
-                            <div><strong>Date:</strong> ${doc.date || 'N/A'}</div>
-                        </div>
-                        ${doc.notes ? `<div style="margin-top: 10px;"><strong>Notes:</strong> ${doc.notes}</div>` : ''}
-                    </div>
-                `).join('');
-            },
-
-            removeDocument(id) {
-                if (confirm('Are you sure you want to remove this document?')) {
-                    this.documentsData = this.documentsData.filter(d => d.id !== id);
-                    this.saveData();
-                    this.renderDocuments();
-                }
-            },
-
-            // Tasks functions
-            showAddTaskForm() {
-                const form = document.getElementById('addTaskForm');
-                if (form) form.classList.remove('hidden');
-            },
-
-            hideAddTaskForm() {
-                const form = document.getElementById('addTaskForm');
-                if (form) form.classList.add('hidden');
-                this.clearTaskForm();
-            },
-
-            clearTaskForm() {
-                const fields = ['taskTitle', 'taskDueDate', 'taskDescription'];
-                fields.forEach(fieldId => {
-                    const field = document.getElementById(fieldId);
-                    if (field) field.value = '';
-                });
-            },
-
-            addTask() {
-                const taskTitle = document.getElementById('taskTitle');
-                const taskPriority = document.getElementById('taskPriority');
-                const taskDueDate = document.getElementById('taskDueDate');
-                const taskDescription = document.getElementById('taskDescription');
-
-                const title = taskTitle ? taskTitle.value : '';
-                if (!title) {
-                    alert('Please enter a task title');
-                    return;
-                }
-
-                const task = {
-                    id: Date.now(),
-                    title: title,
-                    priority: taskPriority ? taskPriority.value : 'medium',
-                    dueDate: taskDueDate ? taskDueDate.value : '',
-                    description: taskDescription ? taskDescription.value : '',
-                    completed: false
-                };
-
-                this.tasksData.push(task);
-                this.saveData();
-                this.renderTasks();
-                this.hideAddTaskForm();
-                this.updateStats();
-            },
-
-            renderTasks() {
-                const tasksList = document.getElementById('tasksList');
-                if (!tasksList) return;
-                
-                if (this.tasksData.length === 0) {
-                    tasksList.innerHTML = `
-                        <div class="empty-state">
-                            <h3>No tasks yet</h3>
-                            <p>Add tasks to stay organized before and during your trip</p>
-                            <button class="btn" id="addFirstTaskBtn">Add First Task</button>
-                        </div>
-                    `;
-                    // Re-bind the button
-                    const addFirstTaskBtn = document.getElementById('addFirstTaskBtn');
-                    if (addFirstTaskBtn) addFirstTaskBtn.addEventListener('click', () => this.showAddTaskForm());
-                    return;
-                }
-
-                tasksList.innerHTML = this.tasksData.map(task => `
-                    <div class="task-item priority-${task.priority}">
-                        <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} 
-                               onchange="TravelPlanner.toggleTaskCompletion(${task.id})">
-                        <div class="task-content">
-                            <div class="task-title" style="${task.completed ? 'text-decoration: line-through; opacity: 0.6;' : ''}">${task.title}</div>
-                            <div class="task-meta">
-                                Priority: ${task.priority.toUpperCase()} 
-                                ${task.dueDate ? `| Due: ${task.dueDate}` : ''}
-                                ${task.description ? `| ${task.description}` : ''}
-                            </div>
-                        </div>
-                        <button class="btn btn-danger btn-small" onclick="TravelPlanner.removeTask(${task.id})">Remove</button>
-                    </div>
-                `).join('');
-            },
-
-            toggleTaskCompletion(id) {
-                const task = this.tasksData.find(t => t.id === id);
-                if (task) {
-                    task.completed = !task.completed;
-                    this.saveData();
-                    this.renderTasks();
-                    this.updateStats();
-                }
-            },
-
-            removeTask(id) {
-                if (confirm('Are you sure you want to remove this task?')) {
-                    this.tasksData = this.tasksData.filter(t => t.id !== id);
-                    this.saveData();
-                    this.renderTasks();
-                    this.updateStats();
-                }
-            },
-
-            // Timeline and Map functions
-            renderTimeline() {
-                const timeline = document.getElementById('timeline');
-                if (!timeline) return;
-                
-                if (this.tripData.length === 0) {
-                    timeline.innerHTML = `
-                        <div class="empty-state">
-                            <h3>No timeline yet</h3>
-                            <p>Add days to your trip to see the timeline</p>
-                        </div>
-                    `;
-                    return;
-                }
-
-                const sortedDays = [...this.tripData].sort((a, b) => new Date(a.date) - new Date(b.date));
-                
-                timeline.innerHTML = sortedDays.map(day => `
-                    <div class="timeline-item ${day.completed ? 'completed' : ''}">
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="card-title">${day.date} - ${day.location}</div>
-                                <div style="font-size: 0.9rem; color: ${day.completed ? '#28a745' : '#6c757d'};">
-                                    ${day.completed ? '✅ Completed' : '⏳ Pending'}
-                                </div>
-                            </div>
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; font-size: 0.9rem;">
-                                <div><strong>Transport:</strong> ${day.transport || 'N/A'}</div>
-                                <div><strong>Stay:</strong> ${day.accommodation || 'N/A'}</div>
-                                <div><strong>Cost:</strong> ${this.getCurrencySymbol()}${day.cost}</div>
-                            </div>
-                            ${day.notes ? `<div style="margin-top: 10px; font-size: 0.9rem; color: #6c757d;">${day.notes}</div>` : ''}
-                        </div>
-                    </div>
-                `).join('');
-            },
-
-            // Summary functions
-            renderSummary() {
-                const summaryContent = document.getElementById('summaryContent');
-                if (!summaryContent) return;
-                
-                if (!this.tripInfo.name && this.tripData.length === 0) {
-                    summaryContent.innerHTML = `
-                        <div class="empty-state">
-                            <h3>Complete your trip details</h3>
-                            <p>Fill in the other tabs to see your complete trip summary</p>
-                        </div>
-                    `;
-                    return;
-                }
-
-                const totalSpent = this.budgetData.reduce((sum, item) => sum + item.amount, 0);
-                const completedDays = this.tripData.filter(day => day.completed).length;
-                const completedTasks = this.tasksData.filter(task => task.completed).length;
-                
-                summaryContent.innerHTML = `
-                    <div class="form-grid">
-                        <div class="card">
-                            <h3>Trip Overview</h3>
-                            <div><strong>Name:</strong> ${this.tripInfo.name || 'Untitled Trip'}</div>
-                            <div><strong>Dates:</strong> ${this.tripInfo.startDate || 'TBD'} - ${this.tripInfo.endDate || 'TBD'}</div>
-                            <div><strong>Style:</strong> ${this.tripInfo.travelStyle || 'Not specified'}</div>
-                            <div><strong>Currency:</strong> ${this.tripInfo.currency}</div>
-                        </div>
-                        
-                        <div class="card">
-                            <h3>Budget Summary</h3>
-                            <div><strong>Total Budget:</strong> ${this.getCurrencySymbol()}${this.tripInfo.totalBudget}</div>
-                            <div><strong>Total Spent:</strong> ${this.getCurrencySymbol()}${totalSpent.toFixed(2)}</div>
-                            <div><strong>Remaining:</strong> ${this.getCurrencySymbol()}${(this.tripInfo.totalBudget - totalSpent).toFixed(2)}</div>
-                            <div class="progress-bar" style="margin-top: 10px;">
-                                <div class="progress-fill" style="width: ${Math.min((totalSpent / this.tripInfo.totalBudget) * 100, 100)}%"></div>
-                            </div>
-                        </div>
-                        
-                        <div class="card">
-                            <h3>Progress</h3>
-                            <div><strong>Days Planned:</strong> ${this.tripData.length}</div>
-                            <div><strong>Days Completed:</strong> ${completedDays}</div>
-                            <div><strong>Tasks Completed:</strong> ${completedTasks}/${this.tasksData.length}</div>
-                            <div><strong>Documents:</strong> ${this.documentsData.length}</div>
-                        </div>
-                    </div>
-
-                    ${this.tripData.length > 0 ? `
-                        <div style="margin-top: 30px;">
-                            <h3>Itinerary</h3>
-                            ${this.tripData.sort((a, b) => new Date(a.date) - new Date(b.date)).map(day => `
-                                <div class="card">
-                                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                                        <div>
-                                            <strong>${day.date} - ${day.location}</strong>
-                                            <div style="font-size: 0.9rem; color: #6c757d; margin-top: 5px;">
-                                                ${day.transport ? `🚗 ${day.transport}` : ''} 
-                                                ${day.accommodation ? `🏨 ${day.accommodation}` : ''}
-                                            </div>
-                                        </div>
-                                        <div style="text-align: right;">
-                                            <div><strong>${this.getCurrencySymbol()}${day.cost}</strong></div>
-                                            <div style="font-size: 0.9rem; color: ${day.completed ? '#28a745' : '#6c757d'};">
-                                                ${day.completed ? '✅ Done' : '⏳ Pending'}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    ` : ''}
-                `;
-            },
-
-            // Export functions
-            exportToCSV() {
-                const csvData = [];
-                
-                // Add trip overview
-                csvData.push(['Trip Overview']);
-                csvData.push(['Name', this.tripInfo.name || 'Untitled Trip']);
-                csvData.push(['Start Date', this.tripInfo.startDate || 'TBD']);
-                csvData.push(['End Date', this.tripInfo.endDate || 'TBD']);
-                csvData.push(['Total Budget', `${this.getCurrencySymbol()}${this.tripInfo.totalBudget}`]);
-                csvData.push(['Travel Style', this.tripInfo.travelStyle]);
-                csvData.push([]);
-
-                // Add itinerary
-                if (this.tripData.length > 0) {
-                    csvData.push(['Itinerary']);
-                    csvData.push(['Date', 'Location', 'Transport', 'Accommodation', 'Cost', 'Notes', 'Completed']);
-                    this.tripData.forEach(day => {
-                        csvData.push([
-                            day.date,
-                            day.location,
-                            day.transport || '',
-                            day.accommodation || '',
-                            day.cost,
-                            day.notes || '',
-                            day.completed ? 'Yes' : 'No'
-                        ]);
-                    });
-                    csvData.push([]);
-                }
-
-                // Add budget
-                if (this.budgetData.length > 0) {
-                    csvData.push(['Budget']);
-                    csvData.push(['Date', 'Category', 'Description', 'Amount']);
-                    this.budgetData.forEach(item => {
-                        csvData.push([
-                            item.date,
-                            item.category,
-                            item.description || '',
-                            item.amount
-                        ]);
-                    });
-                    csvData.push([]);
-                }
-
-                // Add tasks
-                if (this.tasksData.length > 0) {
-                    csvData.push(['Tasks']);
-                    csvData.push(['Title', 'Priority', 'Due Date', 'Description', 'Completed']);
-                    this.tasksData.forEach(task => {
-                        csvData.push([
-                            task.title,
-                            task.priority,
-                            task.dueDate || '',
-                            task.description || '',
-                            task.completed ? 'Yes' : 'No'
-                        ]);
-                    });
-                }
-
-                // Convert to CSV string
-                const csvString = csvData.map(row => 
-                    row.map(cell => `"${cell}"`).join(',')
-                ).join('\n');
-
-                // Download CSV
-                const blob = new Blob([csvString], { type: 'text/csv' });
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `${this.tripInfo.name || 'trip'}-plan.csv`;
-                a.click();
-                window.URL.revokeObjectURL(url);
-            },
-
-            copyToClipboard() {
-                const summary = this.generateTextSummary();
-                if (navigator.clipboard) {
-                    navigator.clipboard.writeText(summary).then(() => {
-                        alert('Trip summary copied to clipboard!');
-                    }).catch(() => {
-                        alert('Failed to copy to clipboard');
-                    });
-                } else {
-                    alert('Clipboard not supported in this browser');
-                }
-            },
-
-            generateTextSummary() {
-                let summary = `TRIP SUMMARY\n${'='.repeat(50)}\n\n`;
-                
-                summary += `Trip: ${this.tripInfo.name || 'Untitled Trip'}\n`;
-                summary += `Dates: ${this.tripInfo.startDate || 'TBD'} - ${this.tripInfo.endDate || 'TBD'}\n`;
-                summary += `Budget: ${this.getCurrencySymbol()}${this.tripInfo.totalBudget}\n`;
-                summary += `Style: ${this.tripInfo.travelStyle}\n\n`;
-
-                if (this.tripData.length > 0) {
-                    summary += `ITINERARY\n${'-'.repeat(30)}\n`;
-                    this.tripData.sort((a, b) => new Date(a.date) - new Date(b.date)).forEach(day => {
-                        summary += `${day.date} - ${day.location}\n`;
-                        if (day.transport) summary += `  Transport: ${day.transport}\n`;
-                        if (day.accommodation) summary += `  Stay: ${day.accommodation}\n`;
-                        summary += `  Cost: ${this.getCurrencySymbol()}${day.cost}\n`;
-                        if (day.notes) summary += `  Notes: ${day.notes}\n`;
-                        summary += `  Status: ${day.completed ? 'Completed' : 'Pending'}\n\n`;
-                    });
-                }
-
-                if (this.budgetData.length > 0) {
-                    const totalSpent = this.budgetData.reduce((sum, item) => sum + item.amount, 0);
-                    summary += `BUDGET BREAKDOWN\n${'-'.repeat(30)}\n`;
-                    summary += `Total Spent: ${this.getCurrencySymbol()}${totalSpent.toFixed(2)}\n`;
-                    summary += `Remaining: ${this.getCurrencySymbol()}${(this.tripInfo.totalBudget - totalSpent).toFixed(2)}\n\n`;
-                }
-
-                if (this.tasksData.length > 0) {
-                    const completedTasks = this.tasksData.filter(task => task.completed).length;
-                    summary += `TASKS\n${'-'.repeat(30)}\n`;
-                    summary += `Completed: ${completedTasks}/${this.tasksData.length}\n\n`;
-                }
-
-                return summary;
-            },
-
-            // Utility functions
-            getCurrencySymbol() {
-                const symbols = {
-                    'USD': '$',
-                    'EUR': '€',
-                    'GBP': '£',
-                    'JPY': '¥'
-                };
-                return symbols[this.tripInfo.currency] || '';
-            },
-
-            updateStats() {
-                // Calculate days
-                let totalDays = 0;
-                if (this.tripInfo.startDate && this.tripInfo.endDate) {
-                    const start = new Date(this.tripInfo.startDate);
-                    const end = new Date(this.tripInfo.endDate);
-                    totalDays = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
-                }
-
-                // Calculate budget
-                const totalSpent = this.budgetData.reduce((sum, item) => sum + item.amount, 0);
-
-                // Calculate completion rate
-                const totalItems = this.tripData.length + this.tasksData.length;
-                const completedItems = this.tripData.filter(d => d.completed).length + this.tasksData.filter(t => t.completed).length;
-                const completionRate = totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
-
-                // Update display
-                const totalDaysEl = document.getElementById('totalDays');
-                const totalBudgetEl = document.getElementById('totalBudget');
-                const completionRateEl = document.getElementById('completionRate');
-                
-                if (totalDaysEl) totalDaysEl.textContent = totalDays;
-                if (totalBudgetEl) totalBudgetEl.textContent = `${this.getCurrencySymbol()}${totalSpent.toFixed(0)}`;
-                if (completionRateEl) completionRateEl.textContent = `${completionRate}%`;
-            },
-
-            saveData() {
-                const data = {
-                    tripInfo: this.tripInfo,
-                    tripData: this.tripData,
-                    budgetData: this.budgetData,
-                    documentsData: this.documentsData,
-                    tasksData: this.tasksData
-                };
-                // Store in memory for this session
-                window.travelPlannerData = data;
-            },
-
-            loadData() {
-                try {
-                    if (window.travelPlannerData) {
-                        const data = window.travelPlannerData;
-                        this.tripInfo = data.tripInfo || this.tripInfo;
-                        this.tripData = data.tripData || [];
-                        this.budgetData = data.budgetData || [];
-                        this.documentsData = data.documentsData || [];
-                        this.tasksData = data.tasksData || [];
-                    }
-
-                    // Load into form fields
-                    if (this.tripInfo.name) {
-                        const tripNameEl = document.getElementById('tripName');
-                        const startDateEl = document.getElementById('startDate');
-                        const endDateEl = document.getElementById('endDate');
-                        const currencyEl = document.getElementById('currency');
-                        const totalBudgetEl = document.getElementById('totalBudgetInput');
-                        const travelStyleEl = document.getElementById('travelStyle');
-                        
-                        if (tripNameEl) tripNameEl.value = this.tripInfo.name;
-                        if (startDateEl) startDateEl.value = this.tripInfo.startDate;
-                        if (endDateEl) endDateEl.value = this.tripInfo.endDate;
-                        if (currencyEl) currencyEl.value = this.tripInfo.currency;
-                        if (totalBudgetEl) totalBudgetEl.value = this.tripInfo.totalBudget;
-                        if (travelStyleEl) travelStyleEl.value = this.tripInfo.travelStyle;
-                    }
-                } catch (error) {
-                    console.log('Error loading data:', error);
-                }
-            },
-
-            renderAll() {
-                this.renderDays();
-                this.renderBudget();
-                this.renderDocuments();
-                this.renderTasks();
-                this.renderTimeline();
-                this.renderSummary();
-            }
+        // Global Variables
+        let tripData = [];
+        let documentsData = [];
+        let tasksData = [];
+        let budgetData = {
+            accommodationBudget: 50,
+            foodBudget: 30,
+            activitiesBudget: 40,
+            transportBudget: 200,
+            shoppingBudget: 100,
+            emergencyBudget: 200
+        };
+        let tripInfo = {
+            name: '',
+            startDate: '',
+            endDate: '',
+            destinations: '',
+            totalBudget: 2000,
+            currency: 'USD',
+            travelStyle: 'Mid-range'
+        };
+        let currentTaskFilter = 'all';
+
+        // Currency symbols
+        const currencySymbols = {
+            'USD': ', 'EUR': '€', 'GBP': '£', 'JPY': '¥', 
+            'CAD': 'C, 'AUD': 'A
         };
 
-        // Initialize the application when DOM is loaded
+        // Initialize App
         document.addEventListener('DOMContentLoaded', function() {
-            TravelPlanner.init();
+            loadFromStorage();
+            updateAllViews();
+            setupEventListeners();
+            showAlert('Welcome to TravelFlow! 🌍', 'info');
         });
 
-        // Make TravelPlanner globally accessible for onclick handlers
-        window.TravelPlanner = TravelPlanner;
-    </script>
-</body>
-</html>
+        // Local Storage Functions
+        function saveToStorage() {
+            const data = {
+                tripData,
+                documentsData,
+                tasksData,
+                budgetData,
+                tripInfo,
+                lastSaved: new Date().toISOString()
+            };
+            localStorage.setItem('travelFlowData', JSON.stringify(data));
+        }
+
+        function loadFromStorage() {
+            const saved = localStorage.getItem('travelFlowData');
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    tripData = data.tripData || [];
+                    documentsData = data.documentsData || [];
+                    tasksData = data.tasksData || [];
+                    budgetData = { ...budgetData, ...data.budgetData };
+                    tripInfo = { ...tripInfo, ...data.tripInfo };
+                    
+                    populateFormFields();
+                    showAlert('Previous data loaded! 📊', 'success');
+                } catch (e) {
+                    console.error('Error loading data:', e);
+                    showAlert('Error loading previous data', 'error');
+                }
+            }
+        }
+
+        function populateFormFields() {
+            // Overview fields
+            document.getElementById('tripName').value = tripInfo.name || '';
+            document.getElementById('startDate').value = tripInfo.startDate || '';
+            document.getElementById('endDate').value = tripInfo.endDate || '';
+            document.getElementById('destinations').value = tripInfo.destinations || '';
+            document.getElementById('totalBudget').value = tripInfo.totalBudget || 2000;
+            document.getElementById('currency').value = tripInfo.currency || 'USD';
+            document.getElementById('travelStyle').value = tripInfo.travelStyle || 'Mid-range';
+            
+            // Budget fields
+            document.getElementById('accommodationBudget').value = budgetData.accommodationBudget || 50;
+            document.getElementById('foodBudget').value = budgetData.foodBudget || 30;
+            document.getElementById('activitiesBudget').value = budgetData.activitiesBudget || 40;
+            document.getElementById('transportBudget').value = budgetData.transportBudget || 200;
+            document.getElementById('shoppingBudget').value = budgetData.shoppingBudget || 100;
+            document.getElementById('emergencyBudget').value = budgetData.emergencyBudget || 200;
+        }
+
+        function setupEventListeners() {
+            // Auto-save on budget changes
+            const budgetFields = ['accommodationBudget', 'foodBudget', 'activitiesBudget', 
+                                'transportBudget', 'shoppingBudget', 'emergencyBudget'];
+            
+            budgetFields.forEach(field => {
+                document.getElementById(field).addEventListener('input', function() {
+                    budgetData[field] = parseFloat(this.value) || 0;
+                    saveToStorage();
+                    updateBudgetVisualization();
+                });
+            });
+
+            // Currency change listener
+            document.getElementById('currency').addEventListener('change', function() {
+                tripInfo.currency = this.value;
+                saveToStorage();
+                updateAllViews();
+            });
+        }
+
+        // Tab Management
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+            
+            // Update content based on tab
+            switch(tabName) {
+                case 'visual':
+                    updateVisualMap();
+                    break;
+                case 'budget':
+                    updateBudgetVisualization();
+                    break;
+                case 'documents':
+                    updateDocumentDayOptions();
+                    updateDocumentsView();
+                    break;
+                case 'tasks':
+                    updateTasksView();
+                    break;
+                case 'summary':
+                    updateSummaryView();
+                    break;
+            }
+        }
+
+        // Trip Overview Functions
+        function saveTripOverview() {
+            tripInfo = {
+                name: document.getElementById('tripName').value,
+                startDate: document.getElementById('startDate').value,
+                endDate: document.getElementById('endDate').value,
+                destinations: document.getElementById('destinations').value,
+                totalBudget: parseFloat(document.getElementById('totalBudget').value) || 2000,
+                currency: document.getElementById('currency').value,
+                travelStyle: document.getElementById('travelStyle').value
+            };
+            
+            saveToStorage();
+            updateAllViews();
+            showAlert('Trip overview saved! ✅', 'success');
+            
+            // Show budget suggestion
+            if (tripInfo.startDate && tripInfo.endDate) {
+                const days = calculateTripDays();
+                const suggestedBudget = calculateSuggestedBudget(days);
+                
+                if (tripInfo.totalBudget < suggestedBudget * 0.8) {
+                    showAlert(`💡 Consider budgeting ${getCurrencySymbol()}${suggestedBudget} for ${days} days`, 'warning');
+                }
+            }
+        }
+
+        function calculateTripDays() {
+            if (!tripInfo.startDate || !tripInfo.endDate) return 0;
+            const start = new Date(tripInfo.startDate);
+            const end = new Date(tripInfo.endDate);
+            return Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+        }
+
+        function calculateSuggestedBudget(days) {
+            const dailyRates = {
+                'Budget': 50,
+                'Mid-range': 100,
+                'Luxury': 200,
+                'Adventure': 80,
+                'Cultural': 90
+            };
+            return (dailyRates[tripInfo.travelStyle] || 100) * days;
+        }
+
+        function getCurrencySymbol() {
+            return currencySymbols[tripInfo.currency] || ';
+        }
+
+        // Planning Functions
+        function addNewDay() {
+            const newDay = {
+                id: Date.now(),
+                day: tripData.length + 1,
+                date: '',
+                location: '',
+                transportation: {
+                    type: 'Flight',
+                    from: '',
+                    to: '',
+                    time: '',
+                    cost: 0
+                },
+                accommodation: {
+                    type: 'Hotel',
+                    name: '',
+                    cost: 0
+                },
+                activities: '',
+                notes: ''
+            };
+            
+            tripData.push(newDay);
+            saveToStorage();
+            updatePlanningView();
+            updateAllViews();
+            showAlert('New day added! 📅', 'success');
+        }
+
+        function addMultipleDays() {
+            const count = parseInt(prompt('How many days would you like to add?', '3')) || 1;
+            for (let i = 0; i < count; i++) {
+                addNewDay();
+            }
+        }
+
+        function generateTemplate() {
+            if (!tripInfo.startDate || !tripInfo.endDate) {
+                showAlert('Please set your trip dates first!', 'warning');
+                return;
+            }
+            
+            const days = calculateTripDays();
+            const destinations = tripInfo.destinations.split(',').map(d => d.trim()).filter(d => d);
+            
+            tripData = [];
+            
+            for (let i = 0; i < days; i++) {
+                const dayDate = new Date(tripInfo.startDate);
+                dayDate.setDate(dayDate.getDate() + i);
+                
+                const newDay = {
+                    id: Date.now() + i,
+                    day: i + 1,
+                    date: dayDate.toISOString().split('T')[0],
+                    location: destinations[Math.floor(i / Math.max(1, days / destinations.length))] || `Destination ${i + 1}`,
+                    transportation: {
+                        type: 'Flight',
+                        from: '',
+                        to: '',
+                        time: '',
+                        cost: 0
+                    },
+                    accommodation: {
+                        type: 'Hotel',
+                        name: '',
+                        cost: budgetData.accommodationBudget || 50
+                    },
+                    activities: '',
+                    notes: ''
+                };
+                
+                tripData.push(newDay);
+            }
+            
+            saveToStorage();
+            updatePlanningView();
+            updateAllViews();
+            showAlert(`Template generated for ${days} days! 🎯`, 'success');
+        }
+
+        function clearAllDays() {
+            if (confirm('Are you sure you want to clear all days? This cannot be undone.')) {
+                tripData = [];
+                saveToStorage();
+                updatePlanningView();
+                updateAllViews();
+                showAlert('All days cleared! 🗑️', 'info');
+            }
+        }
+
+        function deleteDay(id) {
+            if (confirm('Delete this day?')) {
+                tripData = tripData.filter(day => day.id !== id);
+                // Renumber days
+                tripData.forEach((day, index) => day.day = index + 1);
+                saveToStorage();
+                updatePlanningView();
+                updateAllViews();
+                showAlert('Day deleted! 🗑️', 'info');
+            }
+        }
+
+        function updateDayData(id, field, value) {
+            const day = tripData.find(d => d.id === id);
+            if (day) {
+                if (field.includes('.')) {
+                    const [parent, child] = field.split('.');
+                    day[parent][child] = value;
+                } else {
+                    day[field] = value;
+                }
+                saveToStorage();
+                updateAllViews();
+            }
+        }
+
+        function updatePlanningView() {
+            const container = document.getElementById('daysList');
+            
+            if (tripData.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🗺️</div>
+                        <h3>Ready to plan your journey?</h3>
+                        <p>Start by adding your first day above!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = tripData.map((day, index) => {
+                const dayCost = (day.transportation.cost || 0) + (day.accommodation.cost || 0);
+                const completion = calculateDayCompletion(day);
+                const progressClass = completion >= 80 ? 'progress-high' : 
+                                    completion >= 50 ? 'progress-medium' : 'progress-low';
+                
+                return `
+                    <div class="timeline-item">
+                        <div class="timeline-marker">${day.day}</div>
+                        <div class="journey-card">
+                            <div class="progress-indicator ${progressClass}"></div>
+                            <div class="journey-header">
+                                <div class="journey-title">📍 Day ${day.day} - ${day.location || 'Location TBD'}</div>
+                                <div class="journey-cost">${getCurrencySymbol()}${dayCost.toFixed(0)}</div>
+                            </div>
+                            
+                            <div class="form-grid">
+                                <div>
+                                    <div class="form-group">
+                                        <label>📅 Date</label>
+                                        <input type="date" value="${day.date || ''}" 
+                                               onchange="updateDayData(${day.id}, 'date', this.value)">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>📍 Location</label>
+                                        <input type="text" value="${day.location || ''}" 
+                                               placeholder="e.g., Paris, Tokyo"
+                                               onchange="updateDayData(${day.id}, 'location', this.value)">
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="form-group">
+                                        <label>🎯 Activities</label>
+                                        <textarea rows="2" placeholder="What will you do today?"
+                                                onchange="updateDayData(${day.id}, 'activities', this.value)">${day.activities || ''}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-grid">
+                                <div style="background: #f0f8ff; padding: 1rem; border-radius: 12px;">
+                                    <h4>🚌 Transportation</h4>
+                                    <div class="form-group">
+                                        <label>Type</label>
+                                        <select onchange="updateDayData(${day.id}, 'transportation.type', this.value)">
+                                            <option value="Flight" ${day.transportation.type === 'Flight' ? 'selected' : ''}>✈️ Flight</option>
+                                            <option value="Train" ${day.transportation.type === 'Train' ? 'selected' : ''}>🚂 Train</option>
+                                            <option value="Bus" ${day.transportation.type === 'Bus' ? 'selected' : ''}>🚌 Bus</option>
+                                            <option value="Car" ${day.transportation.type === 'Car' ? 'selected' : ''}>🚗 Car</option>
+                                            <option value="Ferry" ${day.transportation.type === 'Ferry' ? 'selected' : ''}>⛴️ Ferry</option>
+                                            <option value="Walking" ${day.transportation.type === 'Walking' ? 'selected' : ''}>🚶 Walking</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label>From</label>
+                                            <input type="text" value="${day.transportation.from || ''}" 
+                                                   placeholder="Departure"
+                                                   onchange="updateDayData(${day.id}, 'transportation.from', this.value)">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>To</label>
+                                            <input type="text" value="${day.transportation.to || ''}" 
+                                                   placeholder="Arrival"
+                                                   onchange="updateDayData(${day.id}, 'transportation.to', this.value)">
+                                        </div>
+                                    </div>
+                                    <div class="form-grid">
+                                        <div class="form-group">
+                                            <label>Time</label>
+                                            <input type="text" value="${day.transportation.time || ''}" 
+                                                   placeholder="09:30 AM"
+                                                   onchange="updateDayData(${day.id}, 'transportation.time', this.value)">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Cost (${getCurrencySymbol()})</label>
+                                            <input type="number" value="${day.transportation.cost || 0}" min="0" step="10"
+                                                   onchange="updateDayData(${day.id}, 'transportation.cost', parseFloat(this.value) || 0)">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div style="background: #fff5f5; padding: 1rem; border-radius: 12px;">
+                                    <h4>🏨 Accommodation</h4>
+                                    <div class="form-group">
+                                        <label>Type</label>
+                                        <select onchange="updateDayData(${day.id}, 'accommodation.type', this.value)">
+                                            <option value="Hotel" ${day.accommodation.type === 'Hotel' ? 'selected' : ''}>🏨 Hotel</option>
+                                            <option value="Hostel" ${day.accommodation.type === 'Hostel' ? 'selected' : ''}>🏠 Hostel</option>
+                                            <option value="Airbnb" ${day.accommodation.type === 'Airbnb' ? 'selected' : ''}>🏡 Airbnb</option>
+                                            <option value="Camping" ${day.accommodation.type === 'Camping' ? 'selected' : ''}>⛺ Camping</option>
+                                            <option value="Guesthouse" ${day.accommodation.type === 'Guesthouse' ? 'selected' : ''}>🏘️ Guesthouse</option>
+                                            <option value="Resort" ${day.accommodation.type === 'Resort' ? 'selected' : ''}>🏖️ Resort</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Name</label>
+                                        <input type="text" value="${day.accommodation.name || ''}" 
+                                               placeholder="Hotel/Place name"
+                                               onchange="updateDayData(${day.id}, 'accommodation.name', this.value)">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Cost (${getCurrencySymbol()})</label>
+                                        <input type="number" value="${day.accommodation.cost || 0}" min="0" step="10"
+                                               onchange="updateDayData(${day.id}, 'accommodation.cost', parseFloat(this.value) || 0)">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>📝 Notes</label>
+                                <textarea rows="2" placeholder="Additional notes, reminders..."
+                                        onchange="updateDayData(${day.id}, 'notes', this.value)">${day.notes || ''}</textarea>
+                            </div>
+                            
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
+                                <div>
+                                    <button class="btn btn-danger" onclick="deleteDay(${day.id})">🗑️ Delete</button>
+                                    <button class="btn btn-secondary" onclick="duplicateDay(${day.id})">📋 Duplicate</button>
+                                </div>
+                                <div>
+                                    <span style="color: var(--text-secondary);">Completion: ${completion}%</span>
+                                    <div class="progress-bar" style="width: 120px; margin-top: 0.25rem;">
+                                        <div class="progress-fill" style="width: ${completion}%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function calculateDayCompletion(day) {
+            const fields = [
+                day.location,
+                day.date,
+                day.transportation.from,
+                day.transportation.to,
+                day.accommodation.type,
+                day.activities
+            ];
+            
+            const completed = fields.filter(field => field && field.toString().trim() !== '').length;
+            return Math.round((completed / fields.length) * 100);
+        }
+
+        function duplicateDay(id) {
+            const dayToDuplicate = tripData.find(d => d.id === id);
+            if (dayToDuplicate) {
+                const newDay = {
+                    ...JSON.parse(JSON.stringify(dayToDuplicate)),
+                    id: Date.now(),
+                    day: tripData.length + 1,
+                    date: ''
+                };
+                
+                tripData.push(newDay);
+                saveToStorage();
+                updatePlanningView();
+                updateAllViews();
+                showAlert('Day duplicated! 📋', 'success');
+            }
+        }
+
+        // Visual Map Functions
+        function updateVisualMap() {
+            updateRouteVisualization();
+            updateVisualTimeline();
+        }
+
+        function updateRouteVisualization() {
+            const container = document.getElementById('routeVisualization');
+            
+            if (tripData.length === 0) {
+                container.innerHTML = '<p>Add some destinations to see your route!</p>';
+                return;
+            }
+
+            const locations = tripData.filter(day => day.location).map(day => day.location);
+            const uniqueLocations = [...new Set(locations)];
+
+            container.innerHTML = `
+                <div style="margin: 2rem 0;">
+                    <h4>🗺️ Your Journey Route</h4>
+                    <div class="route-visual">
+                        ${uniqueLocations.map((location, index) => `
+                            <div class="route-dot" title="${location}"></div>
+                            ${index < uniqueLocations.length - 1 ? '<div class="route-line"></div>' : ''}
+                        `).join('')}
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.9rem;">
+                        ${uniqueLocations.map(location => `<span>${location}</span>`).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateVisualTimeline() {
+            const container = document.getElementById('visualTimeline');
+            
+            if (tripData.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p>Add journey days to see timeline!</p></div>';
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="timeline">
+                    ${tripData.map(day => {
+                        const completion = calculateDayCompletion(day);
+                        const progressClass = completion >= 80 ? 'progress-high' : 
+                                            completion >= 50 ? 'progress-medium' : 'progress-low';
+                        
+                        return `
+                            <div class="timeline-item">
+                                <div class="timeline-marker">${day.day}</div>
+                                <div class="journey-card" style="background: white;">
+                                    <div class="progress-indicator ${progressClass}"></div>
+                                    <h4>${day.location || 'Location TBD'}</h4>
+                                    <p><strong>📅</strong> ${day.date || 'Date TBD'}</p>
+                                    ${day.transportation.from && day.transportation.to ? 
+                                        `<p><strong>🚌</strong> ${day.transportation.from} → ${day.transportation.to}</p>` : ''}
+                                    ${day.accommodation.name ? 
+                                        `<p><strong>🏨</strong> ${day.accommodation.name}</p>` : ''}
+                                    ${day.activities ? 
+                                        `<p><strong>🎯</strong> ${day.activities}</p>` : ''}
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        }
+
+        // Budget Functions
+        function updateBudgetVisualization() {
+            const totalPlanned = calculateTotalPlannedBudget();
+            const totalBudget = tripInfo.totalBudget || 2000;
+            const remaining = totalBudget - totalPlanned;
+            const percentage = totalBudget > 0 ? (totalPlanned / totalBudget * 100) : 0;
+
+            document.getElementById('budgetVisualization').innerHTML = `
+                <div class="stat-card">
+                    <div class="budget-ring" style="--used-angle: ${percentage * 3.6}deg;">
+                        <div class="budget-center">
+                            <div style="font-size: 1.2rem; font-weight: 600;">${percentage.toFixed(1)}%</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Used</div>
+                        </div>
+                    </div>
+                    <div class="stat-label">Budget Usage</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${getCurrencySymbol()}${totalBudget.toFixed(0)}</div>
+                    <div class="stat-label">💰 Total Budget</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${getCurrencySymbol()}${totalPlanned.toFixed(0)}</div>
+                    <div class="stat-label">📝 Planned</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" style="color: ${remaining >= 0 ? '#38a169' : '#e53e3e'}">
+                        ${getCurrencySymbol()}${remaining.toFixed(0)}
+                    </div>
+                    <div class="stat-label">${remaining >= 0 ? '💸 Remaining' : '⚠️ Over Budget'}</div>
+                </div>
+            `;
+
+            // Budget status alert
+            let statusHTML = '';
+            if (remaining < 0) {
+                statusHTML = `<div class="alert alert-error">💸 You're over budget by ${getCurrencySymbol()}${Math.abs(remaining).toFixed(0)}!</div>`;
+            } else if (remaining < totalBudget * 0.1) {
+                statusHTML = `<div class="alert alert-warning">🔶 You're close to your budget limit!</div>`;
+            } else {
+                statusHTML = `<div class="alert alert-success">✅ You're within budget!</div>`;
+            }
+            
+            document.getElementById('budgetStatus').innerHTML = statusHTML;
+        }
+
+        function calculateTotalPlannedBudget() {
+            const tripCosts = tripData.reduce((sum, day) => {
+                return sum + (day.transportation.cost || 0) + (day.accommodation.cost || 0);
+            }, 0);
+
+            const days = tripData.length || calculateTripDays();
+            const dailyCosts = days * (
+                (budgetData.foodBudget || 0) + 
+                (budgetData.activitiesBudget || 0)
+            );
+
+            const otherCosts = (budgetData.transportBudget || 0) + 
+                             (budgetData.shoppingBudget || 0) + 
+                             (budgetData.emergencyBudget || 0);
+
+            return tripCosts + dailyCosts + otherCosts;
+        }
+
+        // Document Functions
+        function updateDocumentDayOptions() {
+            const select = document.getElementById('documentDay');
+            select.innerHTML = '<option value="">Select Day</option>';
+            
+            tripData.forEach(day => {
+                const option = document.createElement('option');
+                option.value = day.day;
+                option.textContent = `Day ${day.day} - ${day.location || 'TBD'}`;
+                select.appendChild(option);
+            });
+        }
+
+        function addDocument() {
+            const day = document.getElementById('documentDay').value;
+            const type = document.getElementById('documentType').value;
+            const name = document.getElementById('documentName').value;
+            const details = document.getElementById('documentDetails').value;
+            const status = document.getElementById('documentStatus').value;
+
+            if (!day || !name.trim()) {
+                showAlert('Please select a day and enter document name!', 'error');
+                return;
+            }
+
+            const newDocument = {
+                id: Date.now(),
+                day: parseInt(day),
+                type: type,
+                name: name.trim(),
+                details: details.trim(),
+                status: status,
+                dateAdded: new Date().toISOString()
+            };
+
+            documentsData.push(newDocument);
+            saveToStorage();
+            updateDocumentsView();
+
+            // Clear form
+            document.getElementById('documentDay').value = '';
+            document.getElementById('documentName').value = '';
+            document.getElementById('documentDetails').value = '';
+            document.getElementById('documentStatus').value = 'pending';
+
+            showAlert('Document added! 📄', 'success');
+        }
+
+        function deleteDocument(id) {
+            if (confirm('Delete this document?')) {
+                documentsData = documentsData.filter(doc => doc.id !== id);
+                saveToStorage();
+                updateDocumentsView();
+                showAlert('Document deleted!', 'info');
+            }
+        }
+
+        function updateDocumentStatus(id, newStatus) {
+            const doc = documentsData.find(d => d.id === id);
+            if (doc) {
+                doc.status = newStatus;
+                saveToStorage();
+                updateDocumentsView();
+            }
+        }
+
+        function updateDocumentsView() {
+            const container = document.getElementById('documentsContainer');
+            
+            if (tripData.length === 0) {
+                container.innerHTML = `
+                    <div class="alert alert-warning">
+                        <strong>⚠️ No journey days planned yet!</strong><br>
+                        Go to the <strong>Planning</strong> tab first to add some days, then come back here to add documents.
+                    </div>
+                `;
+                return;
+            }
+
+            if (documentsData.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📄</div>
+                        <h3>No documents yet</h3>
+                        <p>Start adding your bookings and reservations!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Group documents by day
+            const groupedDocs = {};
+            documentsData.forEach(doc => {
+                if (!groupedDocs[doc.day]) {
+                    groupedDocs[doc.day] = [];
+                }
+                groupedDocs[doc.day].push(doc);
+            });
+
+            let html = '';
+            Object.keys(groupedDocs).sort((a, b) => parseInt(a) - parseInt(b)).forEach(day => {
+                const dayData = tripData.find(d => d.day === parseInt(day));
+                const dayLocation = dayData ? dayData.location || 'TBD' : 'TBD';
+                
+                html += `
+                    <div class="card" style="margin-bottom: 2rem;">
+                        <h4>📅 Day ${day} - ${dayLocation}</h4>
+                        ${groupedDocs[day].map(doc => `
+                            <div class="document-item ${doc.status}">
+                                <div style="flex: 1;">
+                                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                                        <strong>${doc.type}</strong>
+                                        <span class="priority-badge priority-${doc.status === 'confirmed' ? 'low' : doc.status === 'pending' ? 'medium' : 'high'}">
+                                            ${doc.status === 'confirmed' ? '✅ Confirmed' : 
+                                              doc.status === 'pending' ? '🟡 Pending' : '🔴 Cancelled'}
+                                        </span>
+                                    </div>
+                                    <h4>${doc.name}</h4>
+                                    ${doc.details ? `<p style="color: var(--text-secondary); margin-top: 0.5rem;">${doc.details}</p>` : ''}
+                                    <small style="color: var(--text-secondary);">Added: ${new Date(doc.dateAdded).toLocaleDateString()}</small>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem; align-items: flex-start;">
+                                    <select onchange="updateDocumentStatus(${doc.id}, this.value)" style="padding: 0.5rem;">
+                                        <option value="pending" ${doc.status === 'pending' ? 'selected' : ''}>🟡 Pending</option>
+                                        <option value="confirmed" ${doc.status === 'confirmed' ? 'selected' : ''}>🟢 Confirmed</option>
+                                        <option value="cancelled" ${doc.status === 'cancelled' ? 'selected' : ''}>🔴 Cancelled</option>
+                                    </select>
+                                    <button class="btn btn-danger" style="padding: 0.5rem;" onclick="deleteDocument(${doc.id})">🗑️</button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Task Functions
+        function addTask() {
+            const title = document.getElementById('taskTitle').value;
+            const description = document.getElementById('taskDescription').value;
+            const priority = document.getElementById('taskPriority').value;
+            const dueDate = document.getElementById('taskDueDate').value;
+            const category = document.getElementById('taskCategory').value;
+
+            if (!title.trim()) {
+                showAlert('Please enter a task title!', 'error');
+                return;
+            }
+
+            const newTask = {
+                id: Date.now(),
+                title: title.trim(),
+                description: description.trim(),
+                priority: priority,
+                dueDate: dueDate,
+                category: category,
+                completed: false,
+                dateAdded: new Date().toISOString(),
+                dateCompleted: null
+            };
+
+            tasksData.push(newTask);
+            saveToStorage();
+            updateTasksView();
+
+            // Clear form
+            document.getElementById('taskTitle').value = '';
+            document.getElementById('taskDescription').value = '';
+            document.getElementById('taskDueDate').value = '';
+
+            showAlert('Task added! ✅', 'success');
+        }
+
+        function deleteTask(id) {
+            if (confirm('Delete this task?')) {
+                tasksData = tasksData.filter(task => task.id !== id);
+                saveToStorage();
+                updateTasksView();
+                showAlert('Task deleted!', 'info');
+            }
+        }
+
+        function toggleTaskComplete(id) {
+            const task = tasksData.find(t => t.id === id);
+            if (task) {
+                task.completed = !task.completed;
+                task.dateCompleted = task.completed ? new Date().toISOString() : null;
+                saveToStorage();
+                updateTasksView();
+                updateAllViews();
+            }
+        }
+
+        function filterTasks(filter) {
+            currentTaskFilter = filter;
+            updateTasksView();
+        }
+
+        function updateTasksView() {
+            updateTaskStats();
+            updateTasksList();
+        }
+
+        function updateTaskStats() {
+            const total = tasksData.length;
+            const completed = tasksData.filter(t => t.completed).length;
+            const pending = total - completed;
+            const highPriority = tasksData.filter(t => t.priority === 'high' && !t.completed).length;
+            const overdue = tasksData.filter(t => {
+                if (!t.dueDate || t.completed) return false;
+                return new Date(t.dueDate) < new Date();
+            }).length;
+
+            document.getElementById('taskStats').innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-value">${total}</div>
+                    <div class="stat-label">📋 Total Tasks</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${completed}</div>
+                    <div class="stat-label">✅ Completed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${pending}</div>
+                    <div class="stat-label">⏳ Pending</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${highPriority}</div>
+                    <div class="stat-label">🔴 High Priority</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${overdue}</div>
+                    <div class="stat-label">⚠️ Overdue</div>
+                </div>
+            `;
+        }
+
+        function updateTasksList() {
+            const container = document.getElementById('tasksContainer');
+            
+            if (tasksData.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">✅</div>
+                        <h3>No tasks yet</h3>
+                        <p>Add your first travel preparation task!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Filter tasks
+            let filteredTasks = tasksData;
+            switch(currentTaskFilter) {
+                case 'pending':
+                    filteredTasks = tasksData.filter(t => !t.completed);
+                    break;
+                case 'completed':
+                    filteredTasks = tasksData.filter(t => t.completed);
+                    break;
+                case 'high':
+                    filteredTasks = tasksData.filter(t => t.priority === 'high');
+                    break;
+            }
+
+            // Sort tasks
+            filteredTasks.sort((a, b) => {
+                if (a.completed !== b.completed) return a.completed - b.completed;
+                if (a.priority !== b.priority) {
+                    const priorityOrder = { 'high': 0, 'medium': 1, 'low': 2 };
+                    return priorityOrder[a.priority] - priorityOrder[b.priority];
+                }
+                if (a.dueDate && b.dueDate) return new Date(a.dueDate) - new Date(b.dueDate);
+                return 0;
+            });
+
+            const html = filteredTasks.map(task => {
+                const isOverdue = task.dueDate && !task.completed && new Date(task.dueDate) < new Date();
+                const dueDateStr = task.dueDate ? new Date(task.dueDate).toLocaleDateString() : '';
+                
+                return `
+                    <div class="task-item ${task.completed ? 'completed' : ''} ${task.priority}-priority">
+                        <input type="checkbox" ${task.completed ? 'checked' : ''} 
+                               onchange="toggleTaskComplete(${task.id})" 
+                               style="transform: scale(1.3); margin-right: 1rem;">
+                        <div style="flex: 1;">
+                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                                <h4 style="${task.completed ? 'text-decoration: line-through; opacity: 0.6;' : ''}">${task.title}</h4>
+                                <span class="priority-badge priority-${task.priority}">${task.priority.toUpperCase()}</span>
+                                <span style="font-size: 0.9rem; color: var(--text-secondary);">${task.category}</span>
+                            </div>
+                            ${task.description ? `<p style="color: var(--text-secondary); margin-bottom: 0.5rem;">${task.description}</p>` : ''}
+                            ${task.dueDate ? `
+                                <div style="font-size: 0.9rem; color: ${isOverdue ? '#e53e3e' : 'var(--text-secondary)'};">
+                                    ${isOverdue ? '⚠️ Overdue: ' : '📅 Due: '}${dueDateStr}
+                                </div>
+                            ` : ''}
+                        </div>
+                        <button class="btn btn-danger" style="padding: 0.5rem;" onclick="deleteTask(${task.id})">🗑️</button>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = html || `
+                <div class="empty-state">
+                    <p>No tasks match the current filter.</p>
+                </div>
+            `;
+        }
+
+        // Summary Functions
+        function updateSummaryView() {
+            const container = document.getElementById('summaryContent');
+            
+            if (tripData.length === 0 && documentsData.length === 0 && tasksData.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📊</div>
+                        <h3>Complete your planning</h3>
+                        <p>Your journey summary will appear here once you've added trip details!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const totalCost = calculateTotalPlannedBudget();
+            const avgDailyCost = tripData.length > 0 ? totalCost / tripData.length : 0;
+            const tripDays = calculateTripDays();
+            const completedTasks = tasksData.filter(t => t.completed).length;
+            const confirmedDocs = documentsData.filter(d => d.status === 'confirmed').length;
+
+            container.innerHTML = `
+                <div class="card" style="background: var(--primary-gradient); color: white; text-align: center;">
+                    <h2>✈️ ${tripInfo.name || 'My Amazing Journey'}</h2>
+                    <p style="opacity: 0.9; font-size: 1.1rem;">
+                        ${tripInfo.startDate && tripInfo.endDate ? 
+                            `${new Date(tripInfo.startDate).toLocaleDateString()} - ${new Date(tripInfo.endDate).toLocaleDateString()}` : 
+                            'Dates TBD'}
+                    </p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">${tripDays || tripData.length}</div>
+                        <div class="stat-label">📅 Journey Days</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${getCurrencySymbol()}${totalCost.toFixed(0)}</div>
+                        <div class="stat-label">💰 Total Cost</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${getCurrencySymbol()}${avgDailyCost.toFixed(0)}</div>
+                        <div class="stat-label">📊 Daily Average</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${tripData.filter(d => d.location).length}</div>
+                        <div class="stat-label">🗺️ Destinations</div>
+                    </div>
+                </div>
+
+                ${tripData.length > 0 ? `
+                    <div class="card">
+                        <h3>🗓️ Detailed Itinerary</h3>
+                        ${tripData.map(day => {
+                            const dayCost = (day.transportation.cost || 0) + (day.accommodation.cost || 0);
+                            const dayDocs = documentsData.filter(doc => doc.day === day.day);
+                            
+                            return `
+                                <div class="journey-card" style="margin-bottom: 1rem;">
+                                    <div class="journey-header">
+                                        <div class="journey-title">📍 Day ${day.day} - ${day.location || 'TBD'}</div>
+                                        <div class="journey-cost">${getCurrencySymbol()}${dayCost.toFixed(0)}</div>
+                                    </div>
+                                    ${day.date ? `<p><strong>📅 Date:</strong> ${new Date(day.date).toLocaleDateString()}</p>` : ''}
+                                    
+                                    <div class="form-grid">
+                                        <div>
+                                            <strong>🚌 Transportation:</strong><br>
+                                            ${day.transportation.from && day.transportation.to ? 
+                                                `• ${day.transportation.type}: ${day.transportation.from} → ${day.transportation.to}<br>
+                                                 ${day.transportation.time ? '• Time: ' + day.transportation.time + '<br>' : ''}
+                                                 • Cost: ${getCurrencySymbol()}${(day.transportation.cost || 0).toFixed(0)}` 
+                                                : '• Details TBD'}
+                                        </div>
+                                        <div>
+                                            <strong>🏨 Accommodation:</strong><br>
+                                            ${day.accommodation.type ? 
+                                                `• Type: ${day.accommodation.type}<br>
+                                                 ${day.accommodation.name ? '• ' + day.accommodation.name + '<br>' : ''}
+                                                 • Cost: ${getCurrencySymbol()}${(day.accommodation.cost || 0).toFixed(0)}` 
+                                                : '• Details TBD'}
+                                        </div>
+                                    </div>
+                                    
+                                    ${day.activities ? `<p><strong>🎯 Activities:</strong> ${day.activities}</p>` : ''}
+                                    ${day.notes ? `<p><strong>📝 Notes:</strong> ${day.notes}</p>` : ''}
+                                    
+                                    ${dayDocs.length > 0 ? `
+                                        <div style="margin-top: 1rem; padding: 1rem; background: #f8fafc; border-radius: 8px;">
+                                            <strong>📄 Documents:</strong><br>
+                                            ${dayDocs.map(doc => `• ${doc.type}: ${doc.name} (${doc.status === 'confirmed' ? '✅' : doc.status === 'pending' ? '🟡' : '🔴'})`).join('<br>')}
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                ` : ''}
+
+                ${documentsData.length > 0 || tasksData.length > 0 ? `
+                    <div class="form-grid">
+                        ${documentsData.length > 0 ? `
+                            <div class="card">
+                                <h3>📄 Documents Summary</h3>
+                                <div class="stats-grid">
+                                    <div class="stat-card">
+                                        <div class="stat-value">${documentsData.length}</div>
+                                        <div class="stat-label">📊 Total</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-value">${confirmedDocs}</div>
+                                        <div class="stat-label">🟢 Confirmed</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-value">${documentsData.filter(d => d.status === 'pending').length}</div>
+                                        <div class="stat-label">🟡 Pending</div>
+                                    </div>
+                                </div>
+                            </div>
+                        ` : ''}
+                        
+                        ${tasksData.length > 0 ? `
+                            <div class="card">
+                                <h3>✅ Tasks Summary</h3>
+                                <div class="stats-grid">
+                                    <div class="stat-card">
+                                        <div class="stat-value">${tasksData.length}</div>
+                                        <div class="stat-label">📊 Total</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-value">${completedTasks}</div>
+                                        <div class="stat-label">✅ Completed</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-value">${tasksData.length - completedTasks}</div>
+                                        <div class="stat-label">⏳ Remaining</div>
+                                    </div>
+                                </div>
+                            </div>
