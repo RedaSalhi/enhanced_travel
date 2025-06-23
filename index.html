@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🎒 Adventure Planner</title>
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <script src="https://cdn.auth0.com/js/auth0-spa-js/2.0/auth0-spa-js.production.js"></script>
     <style>
         * {
             margin: 0;
@@ -707,6 +707,8 @@
     </div>
 
     <script>
+        const AUTH0_DOMAIN  = 'dev-84x7x1f730vyw2fi.uk.auth0.com';
+        const AUTH0_CLIENT = '3SYtHKuI7KKouIpheRzG3XTFkUppidNx';
         // Global variables
         let currentUser = null;
         let tripData = [];
@@ -721,37 +723,46 @@
         let documentsData = {}; // Store documents by day
         let checklistData = {}; // Store checklists by day
 
-        // Initialize Netlify Identity
-        netlifyIdentity.init();
+        import createAuth0Client from 'https://cdn.auth0.com/js/auth0-spa-js/2.0/auth0-spa-js.esm.js';
 
-        // Authentication Functions
-        function login() {
-            netlifyIdentity.open();
+        let auth0 = null;
+        let currentUser = null;
+
+        async function initAuth0() {
+            auth0 = await createAuth0Client({
+            domain: AUTH0_DOMAIN,
+            clientId: AUTH0_CLIENT,
+            authorizationParams: {
+                redirect_uri: window.location.origin       // return here after login
+            }
+            });
+
+            // 2. Handle redirect back from Auth0 (…?code=…&state=…)
+            if (window.location.search.includes('code=') &&
+                window.location.search.includes('state=')) {
+            await auth0.handleRedirectCallback();
+            window.history.replaceState({}, document.title, '/'); // clean URL
+            }
+
+            // 3. Is the user already logged-in?
+            const isAuthenticated = await auth0.isAuthenticated();
+            if (isAuthenticated) {
+            currentUser = await auth0.getUser();     // profile object
+            showMainApp();
+            loadUserData();
+            } else {
+            showAuthScreen();
+            }
+        }
+
+        // 4. Expose login / logout for your buttons
+        async function login() {
+            await auth0.loginWithRedirect();           // Universal Login
         }
 
         function logout() {
-            netlifyIdentity.logout();
+            auth0.logout({ logoutParams: { returnTo: window.location.origin }});
         }
-
-        // Listen for auth events
-        netlifyIdentity.on('init', user => {
-            if (user) {
-                currentUser = user;
-                showMainApp();
-            }
-        });
-
-        netlifyIdentity.on('login', user => {
-            currentUser = user;
-            netlifyIdentity.close();
-            showMainApp();
-            loadUserData();
-        });
-
-        netlifyIdentity.on('logout', () => {
-            currentUser = null;
-            showAuthScreen();
-        });
 
         function showAuthScreen() {
             document.getElementById('authScreen').style.display = 'flex';
@@ -766,16 +777,12 @@
             }
             updateUI();
         }
-
-        // Initialize app
-        window.addEventListener('DOMContentLoaded', function() {
-            setupEventListeners();
-            
-            // Check if user is already logged in
-            if (!currentUser) {
-                showAuthScreen();
-            }
+        
+        window.addEventListener('DOMContentLoaded', () => {
+            initAuth0();          // 🔑 start authentication flow
+            setupEventListeners(); // your original function
         });
+
 
         // Data Storage Functions (using memory since localStorage isn't available)
         function saveUserData() {
