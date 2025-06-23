@@ -4,71 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🎒 Adventure Planner</title>
-    <script>
-        // Try multiple CDN sources for Auth0
-        function loadAuth0SDK() {
-            return new Promise((resolve, reject) => {
-                const cdnUrls = [
-                    'https://cdn.auth0.com/js/auth0-spa-js/2.0/auth0-spa-js.production.js',
-                    'https://unpkg.com/@auth0/auth0-spa-js@2.0.0/dist/auth0-spa-js.production.js',
-                    'https://cdn.jsdelivr.net/npm/@auth0/auth0-spa-js@2.0.0/dist/auth0-spa-js.production.js'
-                ];
-                
-                let currentIndex = 0;
-                
-                function tryNextCDN() {
-                    if (currentIndex >= cdnUrls.length) {
-                        reject(new Error('All Auth0 CDN sources failed to load'));
-                        return;
-                    }
-                    
-                    const script = document.createElement('script');
-                    script.src = cdnUrls[currentIndex];
-                    script.async = true;
-                    
-                    script.onload = () => {
-                        // Wait a bit for the SDK to be available
-                        setTimeout(() => {
-                            if (typeof createAuth0Client !== 'undefined') {
-                                resolve();
-                            } else {
-                                currentIndex++;
-                                tryNextCDN();
-                            }
-                        }, 100);
-                    };
-                    
-                    script.onerror = () => {
-                        console.warn(`Failed to load Auth0 from: ${cdnUrls[currentIndex]}`);
-                        currentIndex++;
-                        tryNextCDN();
-                    };
-                    
-                    document.head.appendChild(script);
-                }
-                
-                // Check if Auth0 is already loaded
-                if (typeof createAuth0Client !== 'undefined') {
-                    resolve();
-                    return;
-                }
-                
-                tryNextCDN();
-            });
-        }
-
-        // Wait for Auth0 SDK to load with timeout
-        function waitForAuth0() {
-            return new Promise((resolve, reject) => {
-                loadAuth0SDK()
-                    .then(resolve)
-                    .catch((error) => {
-                        console.error('Auth0 SDK loading failed:', error);
-                        reject(error);
-                    });
-            });
-        }
-    </script>
     <style>
         * {
             margin: 0;
@@ -88,38 +23,6 @@
             margin: 0 auto;
         }
 
-        .auth-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-        .auth-card {
-            background: white;
-            padding: 3rem;
-            border-radius: 16px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            text-align: center;
-            max-width: 400px;
-            width: 100%;
-        }
-
-        .auth-title {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .auth-subtitle {
-            color: #6c757d;
-            margin-bottom: 2rem;
-            font-size: 1.1rem;
-        }
-
         .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -128,45 +31,18 @@
             text-align: center;
             margin-bottom: 2rem;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
 
-        .header-content h1 {
+        .header h1 {
             font-size: 2.5rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
             text-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
-        .header-content p {
+        .header p {
             font-size: 1.1rem;
             opacity: 0.9;
-        }
-
-        .user-info {
-            text-align: right;
-        }
-
-        .user-email {
-            font-size: 0.9rem;
-            opacity: 0.8;
-            margin-bottom: 0.5rem;
-        }
-
-        .logout-btn {
-            background: rgba(255,255,255,0.2);
-            border: 1px solid rgba(255,255,255,0.3);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .logout-btn:hover {
-            background: rgba(255,255,255,0.3);
         }
 
         .card {
@@ -502,24 +378,8 @@
             transition: width 0.3s ease;
         }
 
-        .loading {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            font-size: 1.5rem;
-        }
-
         @media (max-width: 768px) {
-            .header {
-                flex-direction: column;
-                gap: 1rem;
-                text-align: center;
-            }
-            
-            .header-content h1 {
+            .header h1 {
                 font-size: 2rem;
             }
             
@@ -538,38 +398,12 @@
     </style>
 </head>
 <body>
-    <!-- Loading Screen -->
-    <div id="loadingScreen" class="loading">
-        <div>
-            <div style="font-size: 3rem; margin-bottom: 1rem;">🎒</div>
-            <div>Loading Adventure Planner...</div>
-        </div>
-    </div>
-
-    <!-- Authentication Screen -->
-    <div id="authScreen" class="auth-container" style="display: none;">
-        <div class="auth-card">
-            <h1 class="auth-title">🎒 Adventure Planner</h1>
-            <p class="auth-subtitle">Sign in to start planning your perfect backpacking journey</p>
-            <button class="btn btn-primary" onclick="handleLogin()" id="loginBtn">🔐 Sign In with Auth0</button>
-            <p style="margin-top: 1rem; font-size: 0.9rem; color: #6c757d;">
-                Don't have an account? Click sign in to create one!
-            </p>
-        </div>
-    </div>
-
     <!-- Main Application -->
-    <div id="mainApp" class="container" style="display: none;">
+    <div class="container">
         <!-- Header -->
         <div class="header">
-            <div class="header-content">
-                <h1>🎒 Adventure Planner</h1>
-                <p>Plan your perfect backpacking journey with secure cloud sync!</p>
-            </div>
-            <div class="user-info">
-                <div class="user-email" id="userEmail"></div>
-                <button class="logout-btn" onclick="logout()">🚪 Sign Out</button>
-            </div>
+            <h1>🎒 Adventure Planner</h1>
+            <p>Plan your perfect backpacking journey!</p>
         </div>
 
         <!-- Stats Overview -->
@@ -789,13 +623,7 @@
     </div>
 
     <script>
-        // Auth0 Configuration - Replace with your actual values
-        const AUTH0_DOMAIN = 'dev-84x7x1f730vyw2fi.uk.auth0.com';
-        const AUTH0_CLIENT_ID = '3SYtHKuI7KKouIpheRzG3XTFkUppidNx';
-
         // Global variables
-        let auth0 = null;
-        let currentUser = null;
         let tripData = [];
         let budgetData = {
             totalBudget: 1000,
@@ -808,170 +636,17 @@
         let documentsData = {}; // Store documents by day
         let checklistData = {}; // Store checklists by day
 
-        // Initialize Auth0
-        async function initAuth0() {
-            try {
-                // Wait for Auth0 SDK to be available
-                await waitForAuth0();
-                
-                auth0 = await createAuth0Client({
-                    domain: AUTH0_DOMAIN,
-                    clientId: AUTH0_CLIENT_ID,
-                    authorizationParams: {
-                        redirect_uri: window.location.origin
-                    }
-                });
-
-                // Handle redirect back from Auth0
-                if (window.location.search.includes('code=') && window.location.search.includes('state=')) {
-                    await auth0.handleRedirectCallback();
-                    window.history.replaceState({}, document.title, window.location.pathname);
-                }
-
-                // Check if user is authenticated
-                const isAuthenticated = await auth0.isAuthenticated();
-                
-                if (isAuthenticated) {
-                    currentUser = await auth0.getUser();
-                    showMainApp();
-                    loadUserData();
-                } else {
-                    showAuthScreen();
-                }
-            } catch (error) {
-                console.error('Auth0 initialization error:', error);
-                
-                if (error.message.includes('Auth0 CDN sources failed') || error.message.includes('Auth0 SDK failed')) {
-                    // Fallback: Show app without authentication
-                    showAlert('Authentication service unavailable. Running in offline mode.', 'warning');
-                    currentUser = { email: 'offline@user.com', name: 'Offline User' };
-                    showMainApp();
-                } else {
-                    showAlert('Authentication error. Please refresh the page.', 'error');
-                    showAuthScreen();
-                }
-            }
-        }
-
-        // Safe login wrapper
-        function handleLogin() {
-            const btn = document.getElementById('loginBtn');
-            
-            // If Auth0 failed to load, show alternative message
-            if (!auth0) {
-                showAlert('Authentication service is not available. The app is running in offline mode.', 'warning');
-                return;
-            }
-            
-            if (btn) {
-                btn.textContent = '🔄 Connecting...';
-                btn.disabled = true;
-            }
-            
-            login().finally(() => {
-                if (btn) {
-                    btn.textContent = '🔐 Sign In with Auth0';
-                    btn.disabled = false;
-                }
-            });
-        }
-
-        // Authentication functions
-        async function login() {
-            try {
-                // Check if auth0 client is initialized
-                if (!auth0) {
-                    showAlert('Authentication is still loading. Please wait...', 'warning');
-                    return;
-                }
-                
-                await auth0.loginWithRedirect();
-            } catch (error) {
-                console.error('Login error:', error);
-                showAlert('Login failed. Please try again.', 'error');
-            }
-        }
-
-        function logout() {
-            try {
-                if (!auth0) {
-                    showAlert('Authentication error. Please refresh the page.', 'error');
-                    return;
-                }
-                
-                auth0.logout({
-                    logoutParams: {
-                        returnTo: window.location.origin
-                    }
-                });
-            } catch (error) {
-                console.error('Logout error:', error);
-                showAlert('Logout failed. Please refresh the page.', 'error');
-            }
-        }
-
-        // UI State functions
-        function showLoadingScreen() {
-            document.getElementById('loadingScreen').style.display = 'flex';
-            document.getElementById('authScreen').style.display = 'none';
-            document.getElementById('mainApp').style.display = 'none';
-        }
-
-        function showAuthScreen() {
-            document.getElementById('loadingScreen').style.display = 'none';
-            document.getElementById('authScreen').style.display = 'flex';
-            document.getElementById('mainApp').style.display = 'none';
-        }
-
-        function showMainApp() {
-            document.getElementById('loadingScreen').style.display = 'none';
-            document.getElementById('authScreen').style.display = 'none';
-            document.getElementById('mainApp').style.display = 'block';
-            
-            if (currentUser) {
-                document.getElementById('userEmail').textContent = currentUser.email || currentUser.name || 'User';
-            }
+        // Initialize app
+        window.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
             updateUI();
             initializeGeneralChecklist();
-        }
-
-        // Initialize app
-        window.addEventListener('DOMContentLoaded', async function() {
-            showLoadingScreen();
-            setupEventListeners();
-            
-            // Wait a bit longer to ensure all scripts are loaded
-            setTimeout(async () => {
-                try {
-                    await initAuth0();
-                } catch (error) {
-                    console.error('Failed to initialize Auth0:', error);
-                    showAlert('Failed to initialize authentication. Please refresh the page.', 'error');
-                    showAuthScreen();
-                }
-            }, 500); // Increased delay to 500ms
         });
 
-        // Data Storage Functions (using memory since localStorage isn't available)
-        function saveUserData() {
-            const data = {
-                tripData: tripData,
-                budgetData: budgetData,
-                tripInfo: tripInfo,
-                documentsData: documentsData,
-                checklistData: checklistData,
-                lastSaved: new Date().toISOString()
-            };
-            
-            // In a real implementation, you would save this to a backend database
-            console.log('Saving user data:', data);
-            showAlert('✅ Data saved to cloud!', 'success');
-        }
-
-        function loadUserData() {
-            // In a real implementation, you would load this from a backend database
-            console.log('Loading user data for:', currentUser.email || currentUser.name);
-            updateUI();
+        // Data Storage Functions (using memory)
+        function saveData() {
+            // In a real implementation, you would save this to a backend or localStorage
+            showAlert('✅ Data saved!', 'success');
         }
 
         function clearAllData() {
@@ -1003,7 +678,7 @@
                 if (element) {
                     element.addEventListener('input', function() {
                         budgetData[field] = parseFloat(this.value) || 0;
-                        saveUserData();
+                        saveData();
                         updateBudgetOverview();
                     });
                 }
@@ -1041,7 +716,7 @@
             };
             
             budgetData.totalBudget = tripInfo.totalBudget;
-            saveUserData();
+            saveData();
             updateUI();
             showAlert('✅ Trip overview saved!', 'success');
         }
@@ -1064,7 +739,7 @@
             };
             
             tripData.push(newDay);
-            saveUserData();
+            saveData();
             updateDaysList();
             updateUI();
             updateDocumentSelects();
@@ -1083,7 +758,7 @@
                 tripData = [];
                 documentsData = {};
                 checklistData = {};
-                saveUserData();
+                saveData();
                 updateDaysList();
                 updateUI();
                 updateDocumentSelects();
@@ -1102,7 +777,7 @@
                 
                 // Renumber days
                 tripData.forEach((day, i) => day.day = i + 1);
-                saveUserData();
+                saveData();
                 updateDaysList();
                 updateUI();
                 updateDocumentSelects();
@@ -1113,7 +788,7 @@
         function updateDayData(index, field, value) {
             if (tripData[index]) {
                 tripData[index][field] = value;
-                saveUserData();
+                saveData();
                 updateUI();
                 updateDaysList();
             }
@@ -1294,13 +969,13 @@
                     size: formatFileSize(file.size),
                     type: file.type,
                     uploadDate: new Date().toLocaleDateString(),
-                    data: file // In a real app, you'd upload this to cloud storage
+                    data: file
                 };
                 
                 documentsData[dayNumber].push(document);
             });
             
-            saveUserData();
+            saveData();
             showDocumentsForDay();
             showAlert(`✅ ${files.length} document(s) uploaded!`, 'success');
         }
@@ -1308,7 +983,7 @@
         function deleteDocument(dayNumber, index) {
             if (confirm('Delete this document?')) {
                 documentsData[dayNumber].splice(index, 1);
-                saveUserData();
+                saveData();
                 showDocumentsForDay();
                 showAlert('✅ Document deleted!', 'success');
             }
@@ -1431,7 +1106,7 @@
             });
             
             input.value = '';
-            saveUserData();
+            saveData();
             showChecklistForDay();
             showAlert('✅ Checklist item added!', 'success');
         }
@@ -1439,7 +1114,7 @@
         function toggleChecklistItem(dayNumber, index) {
             if (checklistData[dayNumber] && checklistData[dayNumber][index]) {
                 checklistData[dayNumber][index].completed = !checklistData[dayNumber][index].completed;
-                saveUserData();
+                saveData();
                 showChecklistForDay();
             }
         }
@@ -1447,7 +1122,7 @@
         function deleteChecklistItem(dayNumber, index) {
             if (confirm('Delete this checklist item?')) {
                 checklistData[dayNumber].splice(index, 1);
-                saveUserData();
+                saveData();
                 showChecklistForDay();
                 showAlert('✅ Checklist item deleted!', 'success');
             }
@@ -1565,10 +1240,8 @@
 
             document.getElementById('summaryContent').innerHTML = `
                 <div class="header" style="margin-bottom: 2rem;">
-                    <div class="header-content">
-                        <h1>🎒 ${tripName}</h1>
-                        <p>Your adventure summary</p>
-                    </div>
+                    <h1>🎒 ${tripName}</h1>
+                    <p>Your adventure summary</p>
                 </div>
                 
                 <h3>🗓️ Your Detailed Itinerary</h3>
@@ -1799,7 +1472,7 @@
                     { text: 'Exchange currency or get travel cards', completed: false },
                     { text: 'Create emergency contact list', completed: false }
                 ];
-                saveUserData();
+                saveData();
             }
         }
     </script>
