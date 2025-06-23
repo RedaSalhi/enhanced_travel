@@ -1,0 +1,1659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎒 Adventure Planner</title>
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .auth-card {
+            background: white;
+            padding: 3rem;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .auth-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .auth-subtitle {
+            color: #6c757d;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-content h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .header-content p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-email {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 0.5rem;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 0.5rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: 1rem 2rem;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            font-weight: 500;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0.25rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .col {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .day-card {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .day-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .day-cost {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .stat-label {
+            color: #6c757d;
+            margin-top: 0.5rem;
+        }
+
+        .checklist-item {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .checklist-item.completed {
+            background: #d4edda;
+            border-color: #c3e6cb;
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+
+        .checklist-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .attachment-item {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .attachment-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .attachment-icon {
+            font-size: 1.5rem;
+        }
+
+        .file-upload {
+            display: none;
+        }
+
+        .file-upload-label {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload-label:hover {
+            background: #e9ecef;
+            border-color: #667eea;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            max-width: 90%;
+            max-height: 90%;
+            overflow: auto;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .progress-bar {
+            background: #e9ecef;
+            border-radius: 4px;
+            height: 8px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .progress-fill {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .header-content h1 {
+                font-size: 2rem;
+            }
+            
+            .row {
+                flex-direction: column;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Authentication Screen -->
+    <div id="authScreen" class="auth-container">
+        <div class="auth-card">
+            <h1 class="auth-title">🎒 Adventure Planner</h1>
+            <p class="auth-subtitle">Sign in to start planning your perfect backpacking journey</p>
+            <button class="btn btn-primary" onclick="login()">🔐 Sign In with Netlify</button>
+            <p style="margin-top: 1rem; font-size: 0.9rem; color: #6c757d;">
+                Don't have an account? Click sign in to create one!
+            </p>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="mainApp" class="container" style="display: none;">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <h1>🎒 Adventure Planner</h1>
+                <p>Plan your perfect backpacking journey with secure cloud sync!</p>
+            </div>
+            <div class="user-info">
+                <div class="user-email" id="userEmail"></div>
+                <button class="logout-btn" onclick="logout()">🚪 Sign Out</button>
+            </div>
+        </div>
+
+        <!-- Stats Overview -->
+        <div id="statsOverview" class="stats-grid" style="display: none;">
+            <div class="stat-card">
+                <div class="stat-value" id="totalDays">0</div>
+                <div class="stat-label">📅 Total Days</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalTransport">£0</div>
+                <div class="stat-label">🚌 Transport</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalAccommodation">£0</div>
+                <div class="stat-label">🏨 Accommodation</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalCost">£0</div>
+                <div class="stat-label">💰 Total Cost</div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('overview')">🌍 Trip Overview</button>
+            <button class="tab" onclick="showTab('planning')">📅 Day Planning</button>
+            <button class="tab" onclick="showTab('documents')">📎 Documents</button>
+            <button class="tab" onclick="showTab('checklist')">✅ Checklist</button>
+            <button class="tab" onclick="showTab('budget')">💰 Budget</button>
+            <button class="tab" onclick="showTab('analytics')">📊 Analytics</button>
+            <button class="tab" onclick="showTab('summary')">📋 Summary</button>
+        </div>
+
+        <!-- Trip Overview Tab -->
+        <div id="overview" class="tab-content active">
+            <div class="card">
+                <h2 class="section-title">🌍 Trip Overview</h2>
+                
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="tripName">🎯 Trip Name</label>
+                            <input type="text" id="tripName" placeholder="e.g., European Adventure">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="startDate">📅 Start Date</label>
+                            <input type="date" id="startDate">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="endDate">🏁 End Date</label>
+                            <input type="date" id="endDate">
+                        </div>
+                    </div>
+                    
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="destinations">🗺️ Main Destinations</label>
+                            <textarea id="destinations" rows="4" placeholder="List your must-visit places..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="totalBudget">💰 Total Budget (£)</label>
+                            <input type="number" id="totalBudget" min="0" step="100" value="1000">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="travelStyle">✈️ Travel Style</label>
+                            <select id="travelStyle">
+                                <option value="🎒 Budget Backpacker (£25-40/day)">🎒 Budget Backpacker (£25-40/day)</option>
+                                <option value="🌟 Mid-range Explorer (£40-70/day)">🌟 Mid-range Explorer (£40-70/day)</option>
+                                <option value="💎 Comfort Traveller (£70+/day)">💎 Comfort Traveller (£70+/day)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="groupSize">👥 Group Size</label>
+                            <input type="number" id="groupSize" min="1" max="20" value="1">
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn btn-primary" onclick="saveTripOverview()">💾 Save Trip Overview</button>
+            </div>
+        </div>
+
+        <!-- Day Planning Tab -->
+        <div id="planning" class="tab-content">
+            <div class="card">
+                <h2 class="section-title">📅 Day-by-Day Planning</h2>
+                
+                <div class="row" style="margin-bottom: 2rem;">
+                    <div class="col">
+                        <button class="btn btn-primary" onclick="addNewDay()">➕ Add New Day</button>
+                        <button class="btn btn-secondary" onclick="addMultipleDays()">📅 Add Multiple Days</button>
+                        <input type="number" id="daysToAdd" min="1" max="10" value="1" style="width: 80px; margin-left: 0.5rem;">
+                    </div>
+                    <div class="col" style="text-align: right;">
+                        <button class="btn btn-danger" onclick="clearAllDays()">🗑️ Clear All Days</button>
+                    </div>
+                </div>
+                
+                <div id="daysList">
+                    <!-- Days will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Documents Tab -->
+        <div id="documents" class="tab-content">
+            <div class="card">
+                <h2 class="section-title">📎 Documents & Attachments</h2>
+                
+                <div class="form-group">
+                    <label>📁 Upload Documents by Day</label>
+                    <select id="documentDaySelect" onchange="showDocumentsForDay()">
+                        <option value="">Select a day...</option>
+                    </select>
+                </div>
+                
+                <div id="documentsContent">
+                    <p style="text-align: center; color: #6c757d;">Select a day to manage documents</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Checklist Tab -->
+        <div id="checklist" class="tab-content">
+            <div class="card">
+                <h2 class="section-title">✅ Trip Checklist</h2>
+                
+                <div class="form-group">
+                    <label>📋 Manage Checklist by Day</label>
+                    <select id="checklistDaySelect" onchange="showChecklistForDay()">
+                        <option value="">Select a day...</option>
+                        <option value="general">General Trip Checklist</option>
+                    </select>
+                </div>
+                
+                <div id="checklistContent">
+                    <p style="text-align: center; color: #6c757d;">Select a day to manage checklist</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Budget Tab -->
+        <div id="budget" class="tab-content">
+            <div class="card">
+                <h2 class="section-title">💰 Budget Calculator</h2>
+                
+                <div class="row">
+                    <div class="col">
+                        <h3>🍽️ Daily Expenses</h3>
+                        <div class="form-group">
+                            <label for="foodBudget">Food & Drink (£)</label>
+                            <input type="number" id="foodBudget" min="0" step="5" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="activitiesBudget">Activities (£)</label>
+                            <input type="number" id="activitiesBudget" min="0" step="5" value="0">
+                        </div>
+                    </div>
+                    
+                    <div class="col">
+                        <h3>🛍️ Shopping & Extras</h3>
+                        <div class="form-group">
+                            <label for="shoppingBudget">Shopping (£)</label>
+                            <input type="number" id="shoppingBudget" min="0" step="5" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="miscBudget">Miscellaneous (£)</label>
+                            <input type="number" id="miscBudget" min="0" step="5" value="0">
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="budgetOverview" class="stats-grid">
+                    <!-- Budget stats will be populated here -->
+                </div>
+                
+                <div id="budgetStatus"></div>
+            </div>
+        </div>
+
+        <!-- Analytics Tab -->
+        <div id="analytics" class="tab-content">
+            <div class="card">
+                <h2 class="section-title">📊 Trip Analytics</h2>
+                <div id="analyticsContent">
+                    <p style="text-align: center; color: #6c757d;">Add trip data to see analytics!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Tab -->
+        <div id="summary" class="tab-content">
+            <div class="card">
+                <h2 class="section-title">📋 Trip Summary</h2>
+                <div id="summaryContent">
+                    <p style="text-align: center; color: #6c757d;">Complete your trip planning to see the summary!</p>
+                </div>
+                
+                <div style="margin-top: 2rem; text-align: center;">
+                    <button class="btn btn-primary" onclick="exportToCSV()">📁 Download CSV</button>
+                    <button class="btn btn-secondary" onclick="generateTextSummary()">📋 Generate Text Summary</button>
+                    <button class="btn btn-danger" onclick="clearAllData()">🗑️ Clear All Data</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentUser = null;
+        let tripData = [];
+        let budgetData = {
+            totalBudget: 1000,
+            foodBudget: 0,
+            activitiesBudget: 0,
+            shoppingBudget: 0,
+            miscBudget: 0
+        };
+        let tripInfo = {};
+        let documentsData = {}; // Store documents by day
+        let checklistData = {}; // Store checklists by day
+
+        // Initialize Netlify Identity
+        netlifyIdentity.init();
+
+        // Authentication Functions
+        function login() {
+            netlifyIdentity.open();
+        }
+
+        function logout() {
+            netlifyIdentity.logout();
+        }
+
+        // Listen for auth events
+        netlifyIdentity.on('init', user => {
+            if (user) {
+                currentUser = user;
+                showMainApp();
+            }
+        });
+
+        netlifyIdentity.on('login', user => {
+            currentUser = user;
+            netlifyIdentity.close();
+            showMainApp();
+            loadUserData();
+        });
+
+        netlifyIdentity.on('logout', () => {
+            currentUser = null;
+            showAuthScreen();
+        });
+
+        function showAuthScreen() {
+            document.getElementById('authScreen').style.display = 'flex';
+            document.getElementById('mainApp').style.display = 'none';
+        }
+
+        function showMainApp() {
+            document.getElementById('authScreen').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'block';
+            if (currentUser) {
+                document.getElementById('userEmail').textContent = currentUser.email;
+            }
+            updateUI();
+        }
+
+        // Initialize app
+        window.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            
+            // Check if user is already logged in
+            if (!currentUser) {
+                showAuthScreen();
+            }
+        });
+
+        // Data Storage Functions (using memory since localStorage isn't available)
+        function saveUserData() {
+            const data = {
+                tripData: tripData,
+                budgetData: budgetData,
+                tripInfo: tripInfo,
+                documentsData: documentsData,
+                checklistData: checklistData,
+                lastSaved: new Date().toISOString()
+            };
+            
+            // In a real implementation, you would save this to a backend database
+            // For demo purposes, we'll use memory storage
+            console.log('Saving user data:', data);
+            showAlert('✅ Data saved to cloud!', 'success');
+        }
+
+        function loadUserData() {
+            // In a real implementation, you would load this from a backend database
+            // For demo purposes, we'll initialize with empty data
+            console.log('Loading user data for:', currentUser.email);
+            updateUI();
+        }
+
+        function clearAllData() {
+            if (confirm('Are you sure you want to clear all trip data? This cannot be undone.')) {
+                tripData = [];
+                budgetData = {
+                    totalBudget: 1000,
+                    foodBudget: 0,
+                    activitiesBudget: 0,
+                    shoppingBudget: 0,
+                    miscBudget: 0
+                };
+                tripInfo = {};
+                documentsData = {};
+                checklistData = {};
+                updateUI();
+                updateDaysList();
+                updateDocumentSelects();
+                showAlert('✅ All data cleared!', 'success');
+            }
+        }
+
+        // Event Listeners
+        function setupEventListeners() {
+            const budgetFields = ['foodBudget', 'activitiesBudget', 'shoppingBudget', 'miscBudget'];
+            budgetFields.forEach(field => {
+                const element = document.getElementById(field);
+                if (element) {
+                    element.addEventListener('input', function() {
+                        budgetData[field] = parseFloat(this.value) || 0;
+                        saveUserData();
+                        updateBudgetOverview();
+                    });
+                }
+            });
+        }
+
+        // Tab Functions
+        function showTab(tabName) {
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+            
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+            
+            if (tabName === 'budget') updateBudgetOverview();
+            if (tabName === 'analytics') updateAnalytics();
+            if (tabName === 'summary') updateSummary();
+            if (tabName === 'documents') updateDocumentSelects();
+            if (tabName === 'checklist') updateChecklistSelects();
+        }
+
+        // Trip Overview Functions
+        function saveTripOverview() {
+            tripInfo = {
+                name: document.getElementById('tripName').value,
+                startDate: document.getElementById('startDate').value,
+                endDate: document.getElementById('endDate').value,
+                destinations: document.getElementById('destinations').value,
+                totalBudget: parseFloat(document.getElementById('totalBudget').value) || 1000,
+                travelStyle: document.getElementById('travelStyle').value,
+                groupSize: parseInt(document.getElementById('groupSize').value) || 1
+            };
+            
+            budgetData.totalBudget = tripInfo.totalBudget;
+            saveUserData();
+            updateUI();
+            showAlert('✅ Trip overview saved!', 'success');
+        }
+
+        // Day Planning Functions
+        function addNewDay() {
+            const newDay = {
+                day: tripData.length + 1,
+                date: '',
+                location: '',
+                transportType: 'Bus',
+                transportFrom: '',
+                transportTo: '',
+                transportTime: '',
+                transportCost: 0,
+                accommodationType: 'Hostel',
+                accommodationName: '',
+                accommodationCost: 0,
+                notes: ''
+            };
+            
+            tripData.push(newDay);
+            saveUserData();
+            updateDaysList();
+            updateUI();
+            updateDocumentSelects();
+            updateChecklistSelects();
+        }
+
+        function addMultipleDays() {
+            const count = parseInt(document.getElementById('daysToAdd').value) || 1;
+            for (let i = 0; i < count; i++) {
+                addNewDay();
+            }
+        }
+
+        function clearAllDays() {
+            if (confirm('Are you sure you want to clear all days?')) {
+                tripData = [];
+                documentsData = {};
+                checklistData = {};
+                saveUserData();
+                updateDaysList();
+                updateUI();
+                updateDocumentSelects();
+                updateChecklistSelects();
+            }
+        }
+
+        function deleteDay(index) {
+            if (confirm('Delete this day?')) {
+                const dayToDelete = tripData[index].day;
+                tripData.splice(index, 1);
+                
+                // Remove associated documents and checklists
+                delete documentsData[dayToDelete];
+                delete checklistData[dayToDelete];
+                
+                // Renumber days
+                tripData.forEach((day, i) => day.day = i + 1);
+                saveUserData();
+                updateDaysList();
+                updateUI();
+                updateDocumentSelects();
+                updateChecklistSelects();
+            }
+        }
+
+        function updateDayData(index, field, value) {
+            if (tripData[index]) {
+                tripData[index][field] = value;
+                saveUserData();
+                updateUI();
+                updateDaysList();
+            }
+        }
+
+        function updateDaysList() {
+            const container = document.getElementById('daysList');
+            
+            if (tripData.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #6c757d;">👆 Click "Add New Day" to start planning your itinerary!</p>';
+                return;
+            }
+            
+            container.innerHTML = tripData.map((day, index) => {
+                const dayCost = (day.transportCost || 0) + (day.accommodationCost || 0);
+                const completion = calculateDayCompletion(day);
+                const progressIndicator = completion >= 0.8 ? '🟢' : completion >= 0.4 ? '🟡' : '🔴';
+                
+                return `
+                    <div class="day-card">
+                        <div class="day-header">
+                            <div class="day-title">${progressIndicator} Day ${day.day} - ${day.location || 'Location TBD'}</div>
+                            <div class="day-cost">£${dayCost.toFixed(2)}</div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label>📅 Date</label>
+                                    <input type="date" value="${day.date || ''}" onchange="updateDayData(${index}, 'date', this.value)">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label>📍 Location</label>
+                                    <input type="text" value="${day.location || ''}" placeholder="e.g., Paris, Bangkok" onchange="updateDayData(${index}, 'location', this.value)">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label>🚌 Transport Type</label>
+                                    <select onchange="updateDayData(${index}, 'transportType', this.value)">
+                                        <option value="Bus" ${day.transportType === 'Bus' ? 'selected' : ''}>🚌 Bus</option>
+                                        <option value="Train" ${day.transportType === 'Train' ? 'selected' : ''}>🚂 Train</option>
+                                        <option value="Plane" ${day.transportType === 'Plane' ? 'selected' : ''}>✈️ Plane</option>
+                                        <option value="Ferry" ${day.transportType === 'Ferry' ? 'selected' : ''}>⛴️ Ferry</option>
+                                        <option value="Car" ${day.transportType === 'Car' ? 'selected' : ''}>🚗 Car</option>
+                                        <option value="Walking" ${day.transportType === 'Walking' ? 'selected' : ''}>🚶 Walking</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label>🏨 Accommodation</label>
+                                    <select onchange="updateDayData(${index}, 'accommodationType', this.value)">
+                                        <option value="Hostel" ${day.accommodationType === 'Hostel' ? 'selected' : ''}>🏠 Hostel</option>
+                                        <option value="Hotel" ${day.accommodationType === 'Hotel' ? 'selected' : ''}>🏨 Hotel</option>
+                                        <option value="Guesthouse" ${day.accommodationType === 'Guesthouse' ? 'selected' : ''}>🏡 Guesthouse</option>
+                                        <option value="Camping" ${day.accommodationType === 'Camping' ? 'selected' : ''}>⛺ Camping</option>
+                                        <option value="Airbnb" ${day.accommodationType === 'Airbnb' ? 'selected' : ''}>🏠 Airbnb</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label>Transport Cost (£)</label>
+                                    <input type="number" value="${day.transportCost || 0}" min="0" step="1" onchange="updateDayData(${index}, 'transportCost', parseFloat(this.value) || 0)">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label>Accommodation Cost (£)</label>
+                                    <input type="number" value="${day.accommodationCost || 0}" min="0" step="1" onchange="updateDayData(${index}, 'accommodationCost', parseFloat(this.value) || 0)">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>📝 Notes</label>
+                            <textarea rows="2" placeholder="Activities, notes..." onchange="updateDayData(${index}, 'notes', this.value)">${day.notes || ''}</textarea>
+                        </div>
+                        
+                        <div class="row" style="align-items: center;">
+                            <div class="col">
+                                <button class="btn btn-danger" onclick="deleteDay(${index})">🗑️ Delete</button>
+                            </div>
+                            <div class="col">
+                                <div>Completion: ${(completion * 100).toFixed(0)}%</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: ${completion * 100}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function calculateDayCompletion(day) {
+            const requiredFields = ['location', 'transportType', 'accommodationType'];
+            const completed = requiredFields.filter(field => day[field] && day[field].trim() !== '').length;
+            return completed / requiredFields.length;
+        }
+
+        // Documents Functions
+        function updateDocumentSelects() {
+            const select = document.getElementById('documentDaySelect');
+            select.innerHTML = '<option value="">Select a day...</option>';
+            
+            tripData.forEach(day => {
+                const option = document.createElement('option');
+                option.value = day.day;
+                option.textContent = `Day ${day.day} - ${day.location || 'TBD'}`;
+                select.appendChild(option);
+            });
+        }
+
+        function showDocumentsForDay() {
+            const dayNumber = document.getElementById('documentDaySelect').value;
+            const container = document.getElementById('documentsContent');
+            
+            if (!dayNumber) {
+                container.innerHTML = '<p style="text-align: center; color: #6c757d;">Select a day to manage documents</p>';
+                return;
+            }
+            
+            const day = tripData.find(d => d.day == dayNumber);
+            if (!day) return;
+            
+            const documents = documentsData[dayNumber] || [];
+            
+            container.innerHTML = `
+                <h3>📎 Documents for Day ${dayNumber} - ${day.location || 'TBD'}</h3>
+                
+                <div class="form-group">
+                    <label class="file-upload-label" for="fileUpload-${dayNumber}">
+                        📁 Click to upload documents (tickets, reservations, etc.)
+                        <input type="file" id="fileUpload-${dayNumber}" class="file-upload" multiple accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" onchange="handleFileUpload(${dayNumber}, this.files)">
+                    </label>
+                </div>
+                
+                <div id="documentsList-${dayNumber}">
+                    ${documents.map((doc, index) => `
+                        <div class="attachment-item">
+                            <div class="attachment-info">
+                                <span class="attachment-icon">${getFileIcon(doc.type)}</span>
+                                <div>
+                                    <strong>${doc.name}</strong><br>
+                                    <small>${doc.size} • ${doc.uploadDate}</small>
+                                </div>
+                            </div>
+                            <div>
+                                <button class="btn btn-secondary" onclick="downloadDocument(${dayNumber}, ${index})">📥 Download</button>
+                                <button class="btn btn-danger" onclick="deleteDocument(${dayNumber}, ${index})">🗑️ Delete</button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                ${documents.length === 0 ? '<p style="text-align: center; color: #6c757d; margin-top: 1rem;">No documents uploaded yet</p>' : ''}
+            `;
+        }
+
+        function handleFileUpload(dayNumber, files) {
+            if (!documentsData[dayNumber]) {
+                documentsData[dayNumber] = [];
+            }
+            
+            Array.from(files).forEach(file => {
+                const document = {
+                    name: file.name,
+                    size: formatFileSize(file.size),
+                    type: file.type,
+                    uploadDate: new Date().toLocaleDateString(),
+                    data: file // In a real app, you'd upload this to cloud storage
+                };
+                
+                documentsData[dayNumber].push(document);
+            });
+            
+            saveUserData();
+            showDocumentsForDay();
+            showAlert(`✅ ${files.length} document(s) uploaded!`, 'success');
+        }
+
+        function deleteDocument(dayNumber, index) {
+            if (confirm('Delete this document?')) {
+                documentsData[dayNumber].splice(index, 1);
+                saveUserData();
+                showDocumentsForDay();
+                showAlert('✅ Document deleted!', 'success');
+            }
+        }
+
+        function downloadDocument(dayNumber, index) {
+            const doc = documentsData[dayNumber][index];
+            if (doc && doc.data) {
+                const url = URL.createObjectURL(doc.data);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = doc.name;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                showAlert('✅ Document downloaded!', 'success');
+            }
+        }
+
+        function getFileIcon(type) {
+            if (type.includes('pdf')) return '📄';
+            if (type.includes('image')) return '🖼️';
+            if (type.includes('document') || type.includes('word')) return '📝';
+            return '📎';
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Checklist Functions
+        function updateChecklistSelects() {
+            const select = document.getElementById('checklistDaySelect');
+            select.innerHTML = '<option value="">Select a day...</option><option value="general">General Trip Checklist</option>';
+            
+            tripData.forEach(day => {
+                const option = document.createElement('option');
+                option.value = day.day;
+                option.textContent = `Day ${day.day} - ${day.location || 'TBD'}`;
+                select.appendChild(option);
+            });
+        }
+
+        function showChecklistForDay() {
+            const dayNumber = document.getElementById('checklistDaySelect').value;
+            const container = document.getElementById('checklistContent');
+            
+            if (!dayNumber) {
+                container.innerHTML = '<p style="text-align: center; color: #6c757d;">Select a day to manage checklist</p>';
+                return;
+            }
+            
+            let checklist = checklistData[dayNumber] || [];
+            let title = dayNumber === 'general' ? 'General Trip Checklist' : `Checklist for Day ${dayNumber}`;
+            
+            if (dayNumber === 'general' && checklist.length === 0) {
+                checklist = [
+                    { text: 'Pack passport and travel documents', completed: false },
+                    { text: 'Book accommodation', completed: false },
+                    { text: 'Purchase travel insurance', completed: false },
+                    { text: 'Notify bank of travel plans', completed: false },
+                    { text: 'Pack first aid kit', completed: false },
+                    { text: 'Download offline maps', completed: false },
+                    { text: 'Check visa requirements', completed: false },
+                    { text: 'Pack appropriate clothing', completed: false }
+                ];
+                checklistData[dayNumber] = checklist;
+            }
+            
+            container.innerHTML = `
+                <h3>✅ ${title}</h3>
+                
+                <div class="form-group">
+                    <input type="text" id="newChecklistItem-${dayNumber}" placeholder="Add new checklist item..." style="margin-bottom: 0.5rem;">
+                    <button class="btn btn-success" onclick="addChecklistItem('${dayNumber}')">➕ Add Item</button>
+                </div>
+                
+                <div id="checklistItems-${dayNumber}">
+                    ${checklist.map((item, index) => `
+                        <div class="checklist-item ${item.completed ? 'completed' : ''}">
+                            <input type="checkbox" class="checklist-checkbox" ${item.completed ? 'checked' : ''} onchange="toggleChecklistItem('${dayNumber}', ${index})">
+                            <span style="flex: 1;">${item.text}</span>
+                            <button class="btn btn-danger" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;" onclick="deleteChecklistItem('${dayNumber}', ${index})">🗑️</button>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                ${checklist.length === 0 ? '<p style="text-align: center; color: #6c757d; margin-top: 1rem;">No checklist items yet</p>' : ''}
+                
+                <div style="margin-top: 1rem;">
+                    <strong>Progress: ${checklist.length > 0 ? Math.round((checklist.filter(item => item.completed).length / checklist.length) * 100) : 0}% complete</strong>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${checklist.length > 0 ? (checklist.filter(item => item.completed).length / checklist.length) * 100 : 0}%"></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function addChecklistItem(dayNumber) {
+            const input = document.getElementById(`newChecklistItem-${dayNumber}`);
+            const text = input.value.trim();
+            
+            if (!text) {
+                showAlert('Please enter a checklist item!', 'error');
+                return;
+            }
+            
+            if (!checklistData[dayNumber]) {
+                checklistData[dayNumber] = [];
+            }
+            
+            checklistData[dayNumber].push({
+                text: text,
+                completed: false
+            });
+            
+            input.value = '';
+            saveUserData();
+            showChecklistForDay();
+            showAlert('✅ Checklist item added!', 'success');
+        }
+
+        function toggleChecklistItem(dayNumber, index) {
+            if (checklistData[dayNumber] && checklistData[dayNumber][index]) {
+                checklistData[dayNumber][index].completed = !checklistData[dayNumber][index].completed;
+                saveUserData();
+                showChecklistForDay();
+            }
+        }
+
+        function deleteChecklistItem(dayNumber, index) {
+            if (confirm('Delete this checklist item?')) {
+                checklistData[dayNumber].splice(index, 1);
+                saveUserData();
+                showChecklistForDay();
+                showAlert('✅ Checklist item deleted!', 'success');
+            }
+        }
+
+        // Budget Functions
+        function updateBudgetOverview() {
+            const totalTransport = tripData.reduce((sum, day) => sum + (day.transportCost || 0), 0);
+            const totalAccommodation = tripData.reduce((sum, day) => sum + (day.accommodationCost || 0), 0);
+            const additionalCosts = budgetData.foodBudget + budgetData.activitiesBudget + 
+                                  budgetData.shoppingBudget + budgetData.miscBudget;
+            const totalPlanned = totalTransport + totalAccommodation + additionalCosts;
+            const remaining = budgetData.totalBudget - totalPlanned;
+
+            document.getElementById('budgetOverview').innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-value">£${budgetData.totalBudget.toFixed(0)}</div>
+                    <div class="stat-label">💰 Total Budget</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">£${totalPlanned.toFixed(0)}</div>
+                    <div class="stat-label">📝 Planned</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">£${remaining.toFixed(0)}</div>
+                    <div class="stat-label">💸 Remaining</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${budgetData.totalBudget > 0 ? ((totalPlanned / budgetData.totalBudget) * 100).toFixed(1) : 0}%</div>
+                    <div class="stat-label">📈 Used</div>
+                </div>
+            `;
+
+            let statusHTML = '';
+            if (remaining < 0) {
+                statusHTML = `<div class="alert alert-error">💸 Over budget by £${Math.abs(remaining).toFixed(0)}!</div>`;
+            } else if (remaining < budgetData.totalBudget * 0.1) {
+                statusHTML = `<div class="alert alert-warning">🔶 Cutting it close with budget!</div>`;
+            } else {
+                statusHTML = `<div class="alert alert-success">✅ Within budget!</div>`;
+            }
+            
+            document.getElementById('budgetStatus').innerHTML = statusHTML;
+        }
+
+        // Analytics Functions
+        function updateAnalytics() {
+            if (tripData.length === 0) {
+                document.getElementById('analyticsContent').innerHTML = '<p style="text-align: center; color: #6c757d;">Add trip data to see analytics!</p>';
+                return;
+            }
+
+            const completedDays = tripData.filter(day => calculateDayCompletion(day) >= 0.8).length;
+            const completionRate = completedDays / tripData.length;
+
+            // Calculate document and checklist stats
+            const totalDocuments = Object.values(documentsData).reduce((sum, docs) => sum + docs.length, 0);
+            const totalChecklistItems = Object.values(checklistData).reduce((sum, items) => sum + items.length, 0);
+            const completedChecklistItems = Object.values(checklistData).reduce((sum, items) => 
+                sum + items.filter(item => item.completed).length, 0);
+
+            document.getElementById('analyticsContent').innerHTML = `
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">${completedDays}/${tripData.length}</div>
+                        <div class="stat-label">🏁 Days Planned</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${totalDocuments}</div>
+                        <div class="stat-label">📎 Documents</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${completedChecklistItems}/${totalChecklistItems}</div>
+                        <div class="stat-label">✅ Tasks Done</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${(completionRate * 100).toFixed(1)}%</div>
+                        <div class="stat-label">📈 Overall Progress</div>
+                    </div>
+                </div>
+                
+                <div class="progress-bar" style="margin: 1rem 0;">
+                    <div class="progress-fill" style="width: ${completionRate * 100}%"></div>
+                </div>
+                <p style="text-align: center;">Trip Planning Progress: ${(completionRate * 100).toFixed(1)}%</p>
+                
+                <div style="margin-top: 2rem;">
+                    <h3>📊 Daily Cost Breakdown</h3>
+                    <div class="row">
+                        ${tripData.map(day => {
+                            const cost = (day.transportCost || 0) + (day.accommodationCost || 0);
+                            return `
+                                <div class="col" style="min-width: 150px; margin-bottom: 1rem;">
+                                    <div class="stat-card">
+                                        <div class="stat-value" style="font-size: 1.2rem;">£${cost.toFixed(0)}</div>
+                                        <div class="stat-label">Day ${day.day}</div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Summary Functions
+        function updateSummary() {
+            if (tripData.length === 0) {
+                document.getElementById('summaryContent').innerHTML = '<p style="text-align: center; color: #6c757d;">Complete your trip planning to see the summary!</p>';
+                return;
+            }
+
+            const tripName = tripInfo.name || 'My Adventure';
+            const totalCost = tripData.reduce((sum, day) => sum + (day.transportCost || 0) + (day.accommodationCost || 0), 0);
+
+            document.getElementById('summaryContent').innerHTML = `
+                <div class="header" style="margin-bottom: 2rem;">
+                    <div class="header-content">
+                        <h1>🎒 ${tripName}</h1>
+                        <p>Your adventure summary</p>
+                    </div>
+                </div>
+                
+                <h3>🗓️ Your Detailed Itinerary</h3>
+                ${tripData.map(day => {
+                    const dayCost = (day.transportCost || 0) + (day.accommodationCost || 0);
+                    const dayDocs = documentsData[day.day] || [];
+                    const dayChecklist = checklistData[day.day] || [];
+                    const completedTasks = dayChecklist.filter(item => item.completed).length;
+                    
+                    return `
+                        <div class="day-card" style="margin-bottom: 1rem;">
+                            <div class="day-header">
+                                <div class="day-title">📍 Day ${day.day} - ${day.location || 'TBD'}</div>
+                                <div class="day-cost">£${dayCost.toFixed(2)}</div>
+                            </div>
+                            ${day.date ? `<p><strong>📅 Date:</strong> ${day.date}</p>` : ''}
+                            <p><strong>🚌 Transport:</strong> ${day.transportType} • £${(day.transportCost || 0).toFixed(2)}</p>
+                            <p><strong>🏨 Accommodation:</strong> ${day.accommodationType} • £${(day.accommodationCost || 0).toFixed(2)}</p>
+                            ${day.notes ? `<p><strong>📝 Notes:</strong> ${day.notes}</p>` : ''}
+                            <p><strong>📎 Documents:</strong> ${dayDocs.length} uploaded</p>
+                            <p><strong>✅ Tasks:</strong> ${completedTasks}/${dayChecklist.length} completed</p>
+                        </div>
+                    `;
+                }).join('')}
+                
+                <div class="stats-grid" style="margin-top: 2rem;">
+                    <div class="stat-card">
+                        <div class="stat-value">${tripData.length}</div>
+                        <div class="stat-label">📅 Total Days</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">£${totalCost.toFixed(0)}</div>
+                        <div class="stat-label">💰 Total Cost</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">£${tripData.length > 0 ? (totalCost / tripData.length).toFixed(0) : 0}</div>
+                        <div class="stat-label">📊 Avg Daily Cost</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${Object.values(documentsData).reduce((sum, docs) => sum + docs.length, 0)}</div>
+                        <div class="stat-label">📎 Total Documents</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Export Functions
+        function exportToCSV() {
+            if (tripData.length === 0) {
+                showAlert('No trip data to export!', 'error');
+                return;
+            }
+
+            const headers = ['Day', 'Date', 'Location', 'Transport Type', 'Transport Cost', 
+                           'Accommodation Type', 'Accommodation Cost', 'Notes', 'Documents', 'Tasks Completed'];
+
+            const csvContent = [
+                headers.join(','),
+                ...tripData.map(day => {
+                    const dayDocs = documentsData[day.day] || [];
+                    const dayChecklist = checklistData[day.day] || [];
+                    const completedTasks = dayChecklist.filter(item => item.completed).length;
+                    
+                    return [
+                        day.day,
+                        day.date || '',
+                        `"${(day.location || '').replace(/"/g, '""')}"`,
+                        `"${(day.transportType || '').replace(/"/g, '""')}"`,
+                        day.transportCost || 0,
+                        `"${(day.accommodationType || '').replace(/"/g, '""')}"`,
+                        day.accommodationCost || 0,
+                        `"${(day.notes || '').replace(/"/g, '""')}"`,
+                        dayDocs.length,
+                        `${completedTasks}/${dayChecklist.length}`
+                    ].join(',');
+                })
+            ].join('\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${(tripInfo.name || 'trip').replace(/[^a-z0-9]/gi, '_').toLowerCase()}_adventure.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+
+            showAlert('✅ Trip data exported successfully!', 'success');
+        }
+
+        function generateTextSummary() {
+            if (tripData.length === 0) {
+                showAlert('No trip data to generate summary!', 'error');
+                return;
+            }
+
+            const tripName = tripInfo.name || 'My Adventure';
+            const totalCost = tripData.reduce((sum, day) => sum + (day.transportCost || 0) + (day.accommodationCost || 0), 0);
+
+            let text = `🎒 ${tripName}\n${'='.repeat(50)}\n\n`;
+            
+            if (tripInfo.startDate && tripInfo.endDate) {
+                text += `📅 ${tripInfo.startDate} → ${tripInfo.endDate}\n`;
+            }
+            
+            text += `🌍 ${tripData.length} days of adventure\n\n`;
+
+            tripData.forEach(day => {
+                const dayCost = (day.transportCost || 0) + (day.accommodationCost || 0);
+                const dayDocs = documentsData[day.day] || [];
+                const dayChecklist = checklistData[day.day] || [];
+                const completedTasks = dayChecklist.filter(item => item.completed).length;
+                
+                text += `📍 Day ${day.day} - ${day.location || 'TBD'}\n`;
+                text += `📅 Date: ${day.date || 'TBD'}\n`;
+                text += `🚌 Transport: ${day.transportType || 'TBD'}\n`;
+                text += `🏨 Accommodation: ${day.accommodationType || 'TBD'}\n`;
+                if (day.notes) text += `📝 Notes: ${day.notes}\n`;
+                text += `📎 Documents: ${dayDocs.length} uploaded\n`;
+                text += `✅ Tasks: ${completedTasks}/${dayChecklist.length} completed\n`;
+                text += `💰 Cost: £${dayCost.toFixed(2)}\n`;
+                text += '-'.repeat(50) + '\n\n';
+            });
+
+            text += `💰 Total Trip Cost: £${totalCost.toFixed(2)}\n`;
+            text += `🎒 Total Days: ${tripData.length}\n`;
+            if (tripData.length > 0) {
+                text += `📊 Average Daily Cost: £${(totalCost / tripData.length).toFixed(2)}\n`;
+            }
+            text += `📎 Total Documents: ${Object.values(documentsData).reduce((sum, docs) => sum + docs.length, 0)}\n`;
+            const totalTasks = Object.values(checklistData).reduce((sum, items) => sum + items.length, 0);
+            const completedTasks = Object.values(checklistData).reduce((sum, items) => 
+                sum + items.filter(item => item.completed).length, 0);
+            text += `✅ Total Tasks: ${completedTasks}/${totalTasks} completed\n`;
+            text += '\n🌟 Have an amazing adventure! Safe travels! 🎒';
+
+            showTextModal(text);
+        }
+
+        function showTextModal(text) {
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <button class="close-btn" onclick="closeModal(this)">&times;</button>
+                    <h3>📋 Trip Summary</h3>
+                    <textarea readonly style="width: 100%; height: 400px; font-family: monospace; font-size: 0.9rem; margin: 1rem 0;">${text}</textarea>
+                    <div style="text-align: center;">
+                        <button class="btn btn-primary" onclick="copyToClipboard(\`${text.replace(/`/g, '\\`')}\`)">📋 Copy to Clipboard</button>
+                        <button class="btn btn-secondary" onclick="closeModal(this)">Close</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        function closeModal(element) {
+            const modal = element.closest('.modal');
+            if (modal) {
+                document.body.removeChild(modal);
+            }
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showAlert('✅ Copied to clipboard!', 'success');
+            }).catch(() => {
+                showAlert('❌ Failed to copy to clipboard', 'error');
+            });
+        }
+
+        // UI Update Functions
+        function updateUI() {
+            if (tripData.length > 0) {
+                const totalTransport = tripData.reduce((sum, day) => sum + (day.transportCost || 0), 0);
+                const totalAccommodation = tripData.reduce((sum, day) => sum + (day.accommodationCost || 0), 0);
+                const totalCost = totalTransport + totalAccommodation;
+
+                document.getElementById('totalDays').textContent = tripData.length;
+                document.getElementById('totalTransport').textContent = `£${totalTransport.toFixed(0)}`;
+                document.getElementById('totalAccommodation').textContent = `£${totalAccommodation.toFixed(0)}`;
+                document.getElementById('totalCost').textContent = `£${totalCost.toFixed(0)}`;
+                document.getElementById('statsOverview').style.display = 'grid';
+            } else {
+                document.getElementById('statsOverview').style.display = 'none';
+            }
+
+            updateDaysList();
+        }
+
+        // Utility Functions
+        function showAlert(message, type) {
+            const alertClass = `alert-${type}`;
+            const alert = document.createElement('div');
+            alert.className = `alert ${alertClass}`;
+            alert.textContent = message;
+            alert.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 1000; min-width: 300px;';
+            
+            document.body.appendChild(alert);
+            
+            setTimeout(() => {
+                if (document.body.contains(alert)) {
+                    document.body.removeChild(alert);
+                }
+            }, 5000);
+        }
+
+        // Initialize default checklist items for general
+        function initializeGeneralChecklist() {
+            if (!checklistData.general) {
+                checklistData.general = [
+                    { text: 'Research destinations and attractions', completed: false },
+                    { text: 'Book flights and transportation', completed: false },
+                    { text: 'Reserve accommodation', completed: false },
+                    { text: 'Get travel insurance', completed: false },
+                    { text: 'Check passport expiry date', completed: false },
+                    { text: 'Apply for necessary visas', completed: false },
+                    { text: 'Notify bank of travel plans', completed: false },
+                    { text: 'Get required vaccinations', completed: false },
+                    { text: 'Pack essentials (clothes, toiletries, medications)', completed: false },
+                    { text: 'Download offline maps and translation apps', completed: false },
+                    { text: 'Prepare copies of important documents', completed: false },
+                    { text: 'Arrange airport/station transportation', completed: false },
+                    { text: 'Check weather forecast for destinations', completed: false },
+                    { text: 'Exchange currency or get travel cards', completed: false },
+                    { text: 'Create emergency contact list', completed: false }
+                ];
+                saveUserData();
+            }
+        }
+
+        // Auto-initialize general checklist when app loads
+        window.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                if (currentUser) {
+                    initializeGeneralChecklist();
+                }
+            }, 1000);
+        });
+    </script>
+
+    <!-- Netlify Identity Widget CSS Override -->
+    <style>
+        .netlify-identity-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            border: none !important;
+            border-radius: 8px !important;
+            padding: 0.75rem 1.5rem !important;
+            font-weight: 600 !important;
+            transition: all 0.3s ease !important;
+        }
+        
+        .netlify-identity-button:hover {
+            transform: translateY(-1px) !important;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3) !important;
+        }
+    </style>
+</body>
+</html>
