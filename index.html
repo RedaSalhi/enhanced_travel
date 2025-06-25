@@ -769,6 +769,14 @@
 </head>
 <body>
     <div class="container">
+        <!-- Trip Manager -->
+        <div class="trip-manager" style="display: flex; align-items: center; justify-content: flex-end; gap: 1rem; margin-bottom: 1rem;">
+            <label for="tripSelector" style="font-weight: 600;">Trip:</label>
+            <select id="tripSelector" style="padding: 0.5rem; border-radius: 8px;"></select>
+            <button class="btn btn-primary btn-sm" id="newTripBtn">➕ New Trip</button>
+            <button class="btn btn-danger btn-sm" id="deleteTripBtn">🗑️ Delete Trip</button>
+        </div>
+
         <!-- Header -->
         <div class="header">
             <div class="version-badge">v2.0</div>
@@ -1256,65 +1264,167 @@
         let currentFilter = 'all';
         let currentTodoFilter = 'all';
 
+        // Multi-trip management variables
+        let allTrips = [];
+        let currentTripId = null;
+
         // Enhanced Initialization
         window.addEventListener('DOMContentLoaded', function() {
             initializeApp();
         });
 
         function initializeApp() {
-            loadFromStorage();
+            loadAllTrips();
+            setupTripManagerUI();
+            if (!currentTripId || !getCurrentTrip()) {
+                promptNewTrip();
+            } else {
+                loadTripData(currentTripId);
+                setupEventListeners();
+                updateAllUI();
+                checkStorageUsage();
+                showToast('✅ Adventure Planner v2.0 loaded successfully!', 'success');
+            }
+        }
+
+        function loadAllTrips() {
+            const saved = localStorage.getItem('adventurePlannerAllTrips');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                allTrips = parsed.allTrips || [];
+                currentTripId = parsed.currentTripId || (allTrips[0] ? allTrips[0].id : null);
+            } else {
+                allTrips = [];
+                currentTripId = null;
+            }
+        }
+
+        function saveAllTrips() {
+            localStorage.setItem('adventurePlannerAllTrips', JSON.stringify({ allTrips, currentTripId }));
+        }
+
+        function getCurrentTrip() {
+            return allTrips.find(t => t.id === currentTripId);
+        }
+
+        function loadTripData(tripId) {
+            const trip = allTrips.find(t => t.id === tripId);
+            if (!trip) return;
+            currentTripId = tripId;
+            tripData = trip.data.tripData || [];
+            documentsData = trip.data.documentsData || [];
+            todosData = trip.data.todosData || [];
+            budgetData = { ...budgetData, ...(trip.data.budgetData || {}) };
+            tripInfo = trip.data.tripInfo || {};
+            populateFormFields();
             setupEventListeners();
             updateAllUI();
             checkStorageUsage();
-            showToast('✅ Adventure Planner v2.0 loaded successfully!', 'success');
+            updateTripSelector();
         }
 
-        // Enhanced Storage Management
         function saveToStorage() {
             try {
                 showSaveIndicator('saving');
-                
                 const data = {
-                    version: '2.0',
                     tripData,
                     documentsData,
                     todosData,
                     budgetData,
                     tripInfo,
                     lastSaved: new Date().toISOString(),
-                    metadata: {
-                        dayCount: tripData.length,
-                        documentCount: documentsData.length,
-                        todoCount: todosData.length
-                    }
                 };
-
-                const dataString = JSON.stringify(data);
-                const dataSize = new Blob([dataString]).size;
-
-                if (dataSize > LIMITS.MAX_TOTAL_STORAGE) {
-                    throw new Error('Storage limit exceeded');
+                const tripIndex = allTrips.findIndex(t => t.id === currentTripId);
+                if (tripIndex !== -1) {
+                    allTrips[tripIndex].data = data;
                 }
-
-                // In-memory storage for this demo
-                window.adventurePlannerData = data;
-                
+                saveAllTrips();
                 showSaveIndicator('saved');
                 updateStorageMonitor();
-                
             } catch (error) {
                 console.error('Save error:', error);
                 showSaveIndicator('error');
-                
-                if (error.message === 'Storage limit exceeded') {
-                    showToast('⚠️ Storage limit exceeded! Consider removing large files or old data.', 'warning');
-                    suggestOptimization();
-                } else {
-                    showToast('❌ Failed to save data: ' + error.message, 'error');
-                }
+                showToast('❌ Failed to save data: ' + error.message, 'error');
             }
         }
 
+        function setupTripManagerUI() {
+            updateTripSelector();
+            document.getElementById('newTripBtn').onclick = promptNewTrip;
+            document.getElementById('deleteTripBtn').onclick = deleteCurrentTrip;
+            document.getElementById('tripSelector').onchange = function() {
+                const newId = this.value;
+                if (newId !== currentTripId) {
+                    loadTripData(newId);
+                    showToast('✅ Switched to trip: ' + getCurrentTrip().name, 'success');
+                }
+            };
+        }
+
+        function updateTripSelector() {
+            const selector = document.getElementById('tripSelector');
+            selector.innerHTML = '';
+            allTrips.forEach(trip => {
+                const option = document.createElement('option');
+                option.value = trip.id;
+                option.textContent = trip.name;
+                if (trip.id === currentTripId) option.selected = true;
+                selector.appendChild(option);
+            });
+        }
+
+        function promptNewTrip() {
+            const name = prompt('Enter a name for your new trip:');
+            if (!name) return;
+            const id = 'trip_' + Date.now();
+            const newTrip = {
+                id,
+                name,
+                data: {
+                    tripData: [],
+                    documentsData: [],
+                    todosData: [],
+                    budgetData: {
+                        totalBudget: 1000,
+                        foodBudget: 0,
+                        activitiesBudget: 0,
+                        localTransportBudget: 0,
+                        shoppingBudget: 0,
+                        gearBudget: 0,
+                        miscBudget: 0,
+                        emergencyBudget: 0,
+                        insuranceBudget: 0,
+                        visaBudget: 0
+                    },
+                    tripInfo: {}
+                }
+            };
+            allTrips.push(newTrip);
+            currentTripId = id;
+            saveAllTrips();
+            loadTripData(id);
+            showToast('✅ New trip created: ' + name, 'success');
+        }
+
+        function deleteCurrentTrip() {
+            if (!currentTripId) return;
+            const trip = getCurrentTrip();
+            if (!trip) return;
+            if (!confirm(`Are you sure you want to delete the trip "${trip.name}"? This cannot be undone.`)) return;
+            allTrips = allTrips.filter(t => t.id !== currentTripId);
+            if (allTrips.length > 0) {
+                currentTripId = allTrips[0].id;
+                saveAllTrips();
+                loadTripData(currentTripId);
+                showToast('✅ Trip deleted. Switched to: ' + getCurrentTrip().name, 'success');
+            } else {
+                currentTripId = null;
+                saveAllTrips();
+                promptNewTrip();
+            }
+        }
+
+        // Enhanced Storage Management
         function loadFromStorage() {
             try {
                 // Load from memory or localStorage fallback
